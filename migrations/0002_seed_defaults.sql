@@ -1,0 +1,21 @@
+INSERT OR IGNORE INTO categories (id, user_id, type, name, icon, color, is_default, archived, created_at)
+VALUES
+('cat-exp-food', NULL, 'expense', 'Makan & Minum', 'utensils', 'sage', 1, 0, datetime('now')),
+('cat-exp-transport', NULL, 'expense', 'Transportasi', 'bus', 'sky', 1, 0, datetime('now')),
+('cat-exp-shopping', NULL, 'expense', 'Belanja', 'shopping-bag', 'clay', 1, 0, datetime('now')),
+('cat-exp-bills', NULL, 'expense', 'Tagihan', 'receipt', 'moss', 1, 0, datetime('now')),
+('cat-exp-internet', NULL, 'expense', 'Internet', 'wifi', 'sky', 1, 0, datetime('now')),
+('cat-exp-health', NULL, 'expense', 'Kesehatan', 'heart-pulse', 'rose', 1, 0, datetime('now')),
+('cat-exp-education', NULL, 'expense', 'Pendidikan', 'book-open', 'moss', 1, 0, datetime('now')),
+('cat-exp-fun', NULL, 'expense', 'Hiburan', 'sparkles', 'amber', 1, 0, datetime('now')),
+('cat-exp-donation', NULL, 'expense', 'Sedekah', 'hand-heart', 'sage', 1, 0, datetime('now')),
+('cat-exp-debt', NULL, 'expense', 'Cicilan/Hutang', 'credit-card', 'clay', 1, 0, datetime('now')),
+('cat-exp-family', NULL, 'expense', 'Keluarga', 'home', 'rose', 1, 0, datetime('now')),
+('cat-exp-other', NULL, 'expense', 'Lainnya', 'circle-dot', 'stone', 1, 0, datetime('now')),
+('cat-inc-salary', NULL, 'income', 'Gaji', 'wallet', 'sage', 1, 0, datetime('now')),
+('cat-inc-freelance', NULL, 'income', 'Freelance', 'laptop', 'moss', 1, 0, datetime('now')),
+('cat-inc-bonus', NULL, 'income', 'Bonus', 'gift', 'amber', 1, 0, datetime('now')),
+('cat-inc-gift', NULL, 'income', 'Hadiah', 'sparkles', 'rose', 1, 0, datetime('now')),
+('cat-inc-refund', NULL, 'income', 'Refund', 'rotate-ccw', 'sky', 1, 0, datetime('now')),
+('cat-inc-sale', NULL, 'income', 'Jual Barang', 'package', 'clay', 1, 0, datetime('now')),
+('cat-inc-other', NULL, 'income', 'Lainnya', 'circle-dot', 'stone', 1, 0, datetime('now'));

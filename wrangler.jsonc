@@ -1,0 +1,33 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "memoney",
+	"compatibility_date": "2026-06-29",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"pages_build_output_dir": ".svelte-kit/cloudflare",
+	"observability": {
+		"enabled": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "uang-pribadi-db",
+			"database_id": "0e335aec-16ab-4bc9-96b1-ace427800d5c",
+			"remote": true
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "BUCKET",
+			"bucket_name": "uang-pribadi-receipts"
+		}
+	],
+	"ai": {
+		"binding": "AI"
+	},
+	"vars": {
+		"APP_ENV": "production",
+		"APP_TIMEZONE": "Asia/Jakarta"
+	}
+}

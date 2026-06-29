@@ -1,0 +1,20 @@
+export const themeColors = {
+  deepNavy: '#001D39',
+  navy: '#0A4174',
+  steel: '#49769F',
+  teal: '#4E8EA2',
+  blueGray: '#6EA2B3',
+  sky: '#7BBDE8',
+  mist: '#BDD8E9',
+  cream: '#BDD8E9',
+  paper: '#F6FBFE',
+  sage: '#4E8EA2',
+  moss: '#0A4174',
+  clay: '#49769F',
+  skySoft: '#7BBDE8',
+  ink: '#001D39',
+  muted: '#49769F',
+  roseSoft: '#6EA2B3',
+  amberSoft: '#7BBDE8',
+  stoneSoft: '#BDD8E9'
+};

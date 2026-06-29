@@ -1,0 +1,50 @@
+{
+  "name": "memoney",
+  "version": "1.0.0",
+  "description": "Aplikasi pencatatan uang pribadi mobile-first untuk Cloudflare Pages, D1, dan R2.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "cf:types": "wrangler types src/worker-configuration.d.ts",
+    "db:migrate:local": "wrangler d1 migrations apply uang-pribadi-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply uang-pribadi-db --remote",
+    "deploy": "npm run build && wrangler pages deploy .svelte-kit/cloudflare --project-name=memoney --branch=main --commit-dirty=true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rizkyher/meMoney.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rizkyher/meMoney/issues"
+  },
+  "homepage": "https://github.com/rizkyher/meMoney#readme",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260629.1",
+    "@playwright/test": "^1.61.1",
+    "@sveltejs/adapter-cloudflare": "^7.2.9",
+    "@sveltejs/kit": "^2.68.0",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@tailwindcss/vite": "^4.3.2",
+    "svelte": "^5.56.4",
+    "svelte-check": "^4.7.1",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9",
+    "wrangler": "^4.105.0"
+  },
+  "dependencies": {
+    "@lucide/svelte": "^1.22.0",
+    "tesseract.js": "^7.0.0",
+    "zod": "^4.4.3"
+  }
+}

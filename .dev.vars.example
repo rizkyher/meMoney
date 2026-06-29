@@ -1,0 +1,35 @@
+# =========================
+# APP PRIVATE CONFIG
+# Jangan commit file .dev.vars asli
+# =========================
+
+APP_ENV="development"
+
+# Minimal 32 karakter random
+SESSION_SECRET="ganti-dengan-random-string-panjang-minimal-32-karakter"
+
+# Untuk personal login.
+# Simpan HASH password, bukan password asli.
+APP_PASSWORD_HASH="ganti-dengan-hash-password"
+
+# Optional: kalau ingin backup/export terenkripsi
+DATA_ENCRYPTION_KEY="ganti-dengan-random-string-32-byte"
+
+# =========================
+# OCR / AI PARSING OPTIONAL
+# =========================
+
+# client = OCR di browser pakai Tesseract.js
+# workers_ai = parsing OCR dibantu Cloudflare Workers AI
+# external_ai = pakai provider luar, misal OpenAI
+OCR_MODE="client"
+
+# Kalau nanti pakai external AI saja
+OPENAI_API_KEY=""
+
+# =========================
+# SECURITY
+# =========================
+
+COOKIE_SECURE="false"
+COOKIE_SAME_SITE="lax"

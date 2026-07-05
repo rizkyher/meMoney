@@ -11,6 +11,9 @@ describe('money utils', () => {
     expect(parseIDR('Rp25.000')).toBe(25000);
     expect(parseIDR('IDR 25,000')).toBe(25000);
     expect(parseIDR('25.000,00')).toBe(25000);
+    expect(parseIDR('Rp 807.495,00')).toBe(807495);
+    expect(parseIDR('Rp 727.671,23')).toBe(727671);
+    expect(parseIDR('IDR 25,000.00')).toBe(25000);
   });
 
   it('formats money input without currency label', () => {

@@ -1,7 +1,20 @@
 import { parseIndonesianDate } from '$lib/utils/date';
 import { parseIDR } from '$lib/utils/money';
 
-const amountKeywords = ['grand total', 'total', 'jumlah', 'nominal', 'pembayaran', 'transfer', 'amount'];
+const preferredAmountKeywords = [
+  'grand total',
+  'total',
+  'jumlah tagihan',
+  'jumlah pembayaran',
+  'total pembayaran',
+  'nominal pembayaran',
+  'amount due',
+  'amount paid',
+  'balance due'
+];
+const supportingAmountKeywords = ['nominal', 'pembayaran', 'transfer', 'amount', 'paid'];
+const ignoredAmountKeywords = ['npwp', 'invoice #', 'invoice no', 'transaction id', 'id=', 'http', 'https'];
+const secondaryAmountKeywords = ['sub total', 'subtotal', 'taxable', 'vat', 'ppn', 'pajak', 'administration fee', 'admin fee'];
 
 export type ScanDraft = {
   type: 'income' | 'expense';
@@ -18,26 +31,38 @@ export type ScanDraft = {
 };
 
 export function extractAmountCandidates(text: string) {
-  const candidates = new Set<number>();
+  const candidates = new Map<number, number>();
   const lines = text.split(/\n+/).map((line) => line.trim()).filter(Boolean);
 
-  for (const line of lines) {
+  for (const [index, line] of lines.entries()) {
     const lower = line.toLowerCase();
-    const weight = amountKeywords.some((keyword) => lower.includes(keyword)) ? 2 : 1;
-    const matches = line.matchAll(/(?:rp|idr)?\s*([0-9]{1,3}(?:[.,][0-9]{3})+(?:,\d{2})?|[0-9]{4,})/gi);
+    if (ignoredAmountKeywords.some((keyword) => lower.includes(keyword))) continue;
+
+    const isSecondaryAmount = secondaryAmountKeywords.some((keyword) => lower.includes(keyword));
+    const hasPreferredKeyword = !isSecondaryAmount && preferredAmountKeywords.some((keyword) => lower.includes(keyword));
+    const hasSupportingKeyword = supportingAmountKeywords.some((keyword) => lower.includes(keyword));
+    const matches = line.matchAll(/(?:rp|idr)\s*[0-9][0-9.,]*(?:,\d{2}|\.\d{2})?|[0-9]{1,3}(?:[.,][0-9]{3})+(?:,\d{2}|\.\d{2})?/gi);
+
     for (const match of matches) {
       const amount = parseIDR(match[0]);
-      if (amount > 0) {
-        candidates.add(amount);
-        if (weight > 1) candidates.add(amount + 0.1);
-      }
+      if (amount <= 0) continue;
+      if (!hasPreferredKeyword && amount < 100) continue;
+
+      const hasCurrency = /(?:rp|idr)/i.test(match[0]);
+      const preferredScore = hasPreferredKeyword ? 1_000_000 : 0;
+      const supportingScore = hasSupportingKeyword ? 100_000 : 0;
+      const secondaryPenalty = isSecondaryAmount ? -50_000 : 0;
+      const currencyScore = hasCurrency ? 10_000 : 0;
+      const lineScore = Math.max(0, 1000 - index);
+      const amountScore = Math.min(amount, 99_999_999) / 100_000_000;
+      const score = preferredScore + supportingScore + secondaryPenalty + currencyScore + lineScore + amountScore;
+      candidates.set(amount, Math.max(candidates.get(amount) ?? 0, score));
     }
   }
 
-  return [...candidates]
-    .sort((a, b) => b - a)
-    .map((value) => Math.floor(value))
-    .filter((value, index, arr) => arr.indexOf(value) === index);
+  return [...candidates.entries()]
+    .sort((a, b) => b[1] - a[1] || b[0] - a[0])
+    .map(([value]) => value);
 }
 
 export function guessCategory(text: string) {

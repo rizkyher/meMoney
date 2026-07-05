@@ -7,7 +7,9 @@
     placeholder = '25.000',
     required = false,
     large = false,
-    chips = [10000, 20000, 50000, 100000, 500000]
+    disabled = false,
+    chips = [10000, 20000, 50000, 100000, 500000],
+    onValueChange = null
   } = $props();
   let display = $state(formatIDRInput(value));
 
@@ -19,11 +21,13 @@
   function update(next: string) {
     value = parseIDR(next);
     display = formatIDRInput(value);
+    onValueChange?.(value);
   }
 
   function pick(amount: number) {
     value = amount;
     display = formatIDRInput(amount);
+    onValueChange?.(amount);
   }
 </script>
 
@@ -38,9 +42,10 @@
     value={display}
     {placeholder}
     {required}
+    {disabled}
     oninput={(event) => update(event.currentTarget.value)}
   />
-  {#if chips.length}
+  {#if chips.length && !disabled}
     <div class="mt-2 flex flex-wrap gap-2">
       {#each chips as chip}
         <button type="button" class="rounded-lg border border-moss/10 bg-stone-soft/60 px-3 py-1.5 text-sm font-bold text-ink" onclick={() => pick(chip)}>{formatIDR(chip)}</button>

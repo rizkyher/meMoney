@@ -7,7 +7,19 @@ export function formatIDR(amount: number) {
 }
 
 export function parseIDR(input: string) {
-  const normalized = input.replace(/[^\d,-]/g, '').replace(/,00$/, '').replace(/,/g, '');
+  let normalized = input.replace(/[^\d.,-]/g, '');
+  const lastComma = normalized.lastIndexOf(',');
+  const lastDot = normalized.lastIndexOf('.');
+
+  if (lastComma > -1 && lastDot > -1) {
+    const decimalSeparator = lastComma > lastDot ? ',' : '.';
+    normalized = normalized.replace(new RegExp(`\\${decimalSeparator}\\d{1,2}$`), '');
+  } else if (lastComma > -1) {
+    normalized = normalized.replace(/,\d{1,2}$/, '');
+  } else if (lastDot > -1) {
+    normalized = normalized.replace(/\.\d{1,2}$/, '');
+  }
+
   const digits = normalized.replace(/\D/g, '');
   return digits ? Number.parseInt(digits, 10) : 0;
 }

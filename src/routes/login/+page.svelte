@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LockKeyhole, Mail, Sprout, UserRound } from '@lucide/svelte';
+  import { LockKeyhole, Mail, UserRound } from '@lucide/svelte';
   let { data, form } = $props();
   const isRegister = $derived(data.mode === 'register');
   const isSetup = $derived(data.needsSetup);
@@ -14,8 +14,7 @@
   <div class="hill hill-a"></div>
   <div class="hill hill-b"></div>
   <section class="glass-panel z-10 w-full max-w-md rounded-3xl p-6">
-    <span class="mb-4 grid size-12 place-items-center rounded-2xl bg-moss text-paper"><Sprout size={24} /></span>
-    <p class="text-sm font-semibold text-moss">Dompet Pribadi</p>
+    <img class="mb-5 h-auto w-52 max-w-full" src="/logo/memoney_logo_horizontal_light_transparent_2000.png" alt="meMoney" />
     <h1 class="mt-2 text-3xl font-bold">{title}</h1>
     <p class="mt-2 text-sm text-muted">{isRegister ? 'Buat akun pribadi baru dengan ruang data sendiri.' : 'Scan dulu, nanti kamu cek sebelum disimpan.'}</p>
     {#if !isSetup}

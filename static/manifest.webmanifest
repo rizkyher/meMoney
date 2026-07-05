@@ -14,11 +14,10 @@
   "background_color": "#BDD8E9",
   "theme_color": "#0A4174",
   "icons": [
-    { "src": "/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-384.png", "sizes": "384x384", "type": "image/png" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/logo/memoney_app_icon_180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "/logo/memoney_app_icon_192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/logo/memoney_app_icon_384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/logo/memoney_app_icon_512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "shortcuts": [
     {
@@ -26,14 +25,14 @@
       "short_name": "Catat",
       "description": "Tambah pemasukan atau pengeluaran baru.",
       "url": "/app/transactions",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "/logo/memoney_app_icon_192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Scan bukti",
       "short_name": "Scan",
       "description": "Scan struk, invoice, atau PDF.",
       "url": "/app/scan",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "/logo/memoney_app_icon_192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }

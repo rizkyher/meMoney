@@ -14,8 +14,8 @@
   <meta name="apple-mobile-web-app-title" content="meMoney" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="format-detection" content="telephone=no" />
-  <link rel="icon" href="/icons/favicon.png" />
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="icon" href="/logo/memoney_favicon_64.png" />
+  <link rel="apple-touch-icon" href="/logo/memoney_app_icon_180.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
 </svelte:head>
 

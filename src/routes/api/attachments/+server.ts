@@ -2,8 +2,18 @@ import { getDb } from '$lib/server/db';
 import { createId, nowIso } from '$lib/server/db';
 import { ok, fail, requireUser } from '$lib/server/api';
 
-const allowed = new Set(['image/jpeg', 'image/png', 'image/webp']);
-const maxSize = 5 * 1024 * 1024;
+const allowed = new Set(['image/jpeg', 'image/png', 'image/webp', 'application/pdf', 'text/plain', 'text/csv']);
+const maxSize = 12 * 1024 * 1024;
+
+function extensionFor(file: File) {
+  if (file.type === 'image/png') return 'png';
+  if (file.type === 'image/jpeg') return 'jpg';
+  if (file.type === 'image/webp') return 'webp';
+  if (file.type === 'application/pdf') return 'pdf';
+  if (file.type === 'text/csv') return 'csv';
+  if (file.type === 'text/plain') return 'txt';
+  return file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'bin';
+}
 
 export async function POST(event) {
   const user = requireUser(event);
@@ -11,11 +21,11 @@ export async function POST(event) {
   const form = await event.request.formData();
   const file = form.get('file');
   const transactionId = form.get('transaction_id');
-  if (!(file instanceof File)) return fail('NO_FILE', 'Pilih gambar dulu.', 422);
-  if (!allowed.has(file.type)) return fail('INVALID_FILE', 'Format gambar harus JPEG, PNG, atau WebP.', 422);
-  if (file.size > maxSize) return fail('FILE_TOO_LARGE', 'Ukuran gambar maksimal 5 MB.', 422);
+  if (!(file instanceof File)) return fail('NO_FILE', 'Pilih file bukti dulu.', 422);
+  if (!allowed.has(file.type)) return fail('INVALID_FILE', 'Format bukti harus gambar, PDF, TXT, atau CSV.', 422);
+  if (file.size > maxSize) return fail('FILE_TOO_LARGE', 'Ukuran file maksimal 12 MB.', 422);
 
-  const ext = file.type === 'image/png' ? 'png' : file.type === 'image/jpeg' ? 'jpg' : 'webp';
+  const ext = extensionFor(file);
   const date = new Date();
   const key = `receipts/${user.id}/${date.getUTCFullYear()}/${String(date.getUTCMonth() + 1).padStart(2, '0')}/${crypto.randomUUID()}.${ext}`;
   await event.platform?.env.BUCKET.put(key, file.stream(), {

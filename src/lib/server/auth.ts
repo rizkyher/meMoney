@@ -3,6 +3,7 @@ import { createId, nowIso } from './db';
 
 const SESSION_COOKIE = 'uang_session';
 const SESSION_DAYS = 30;
+const PBKDF2_ITERATIONS = 100_000;
 const encoder = new TextEncoder();
 
 function toBase64(bytes: ArrayBuffer | Uint8Array) {
@@ -26,7 +27,7 @@ async function sha256(value: string) {
 export async function hashPassword(password: string, saltBase64 = toBase64(crypto.getRandomValues(new Uint8Array(16)))) {
   const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
   const bits = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', salt: fromBase64(saltBase64), iterations: 210_000, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: fromBase64(saltBase64), iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
     keyMaterial,
     256
   );
@@ -95,9 +96,7 @@ export async function requireLogin(locals: App.Locals) {
   return locals.user;
 }
 
-export async function seedFirstUser(db: D1Database, email: string, name: string, password: string) {
-  const existing = await db.prepare('SELECT COUNT(*) AS count FROM users').first<{ count: number }>();
-  if ((existing?.count ?? 0) > 0) throw error(409, 'User pertama sudah ada.');
+export async function createUser(db: D1Database, email: string, name: string, password: string) {
   const { hash, salt } = await hashPassword(password);
   const id = createId('usr');
   const now = nowIso();
@@ -107,4 +106,10 @@ export async function seedFirstUser(db: D1Database, email: string, name: string,
     db.prepare('INSERT INTO app_settings (user_id, created_at, updated_at) VALUES (?, ?, ?)').bind(id, now, now)
   ]);
   return { id, email, name };
+}
+
+export async function seedFirstUser(db: D1Database, email: string, name: string, password: string) {
+  const existing = await db.prepare('SELECT COUNT(*) AS count FROM users').first<{ count: number }>();
+  if ((existing?.count ?? 0) > 0) throw error(409, 'User pertama sudah ada.');
+  return createUser(db, email, name, password);
 }

@@ -26,6 +26,23 @@ export async function createGoal(db: D1Database, userId: string, input: GoalInpu
   return db.prepare('SELECT * FROM savings_goals WHERE id = ? AND user_id = ?').bind(id, userId).first();
 }
 
+export async function updateGoal(db: D1Database, userId: string, id: string, input: GoalInput) {
+  const now = nowIso();
+  await db
+    .prepare(
+      `UPDATE savings_goals
+       SET name = ?, target_amount = ?, current_amount = ?, target_date = ?, type = ?, icon = ?, color = ?, updated_at = ?
+       WHERE id = ? AND user_id = ? AND archived = 0`
+    )
+    .bind(input.name, input.target_amount, input.current_amount, input.target_date ?? null, input.type, input.icon ?? null, input.color ?? null, now, id, userId)
+    .run();
+  return db.prepare('SELECT * FROM savings_goals WHERE id = ? AND user_id = ? AND archived = 0').bind(id, userId).first();
+}
+
+export async function archiveGoal(db: D1Database, userId: string, id: string) {
+  await db.prepare('UPDATE savings_goals SET archived = 1, updated_at = ? WHERE id = ? AND user_id = ?').bind(nowIso(), id, userId).run();
+}
+
 export async function addMovement(db: D1Database, userId: string, input: MovementInput) {
   const goal = await db.prepare('SELECT current_amount FROM savings_goals WHERE id = ? AND user_id = ?').bind(input.goal_id, userId).first<{ current_amount: number }>();
   if (!goal) throw new Error('Goal tidak ditemukan.');

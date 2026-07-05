@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
+  import MoneyInput from '$lib/components/ui/MoneyInput.svelte';
   import { BadgeDollarSign, Save } from '@lucide/svelte';
   const labels = { daily: 'Jatah harian', weekly: 'Jatah mingguan', monthly: 'Jatah bulanan' };
   export let data: any;
@@ -23,9 +24,9 @@
   </div>
   <div class="card space-y-4 p-4 md:p-5">
     {#each rows as row}
-      <div class="grid gap-3 rounded-lg border border-moss/10 bg-cream/55 p-4 sm:grid-cols-[1fr_160px_140px]">
+      <div class="grid gap-3 rounded-lg border border-moss/10 bg-cream/55 p-4 sm:grid-cols-[1fr_220px_140px]">
         <div><p class="font-black">{labels[row.period]}</p><p class="text-sm text-muted">Manual atau auto sesuai kebutuhan.</p></div>
-        <input class="input" type="number" bind:value={row.amount} min="0" />
+        <MoneyInput id={`budget-${row.period}`} label="Nominal" bind:value={row.amount} chips={[]} />
         <select class="input" bind:value={row.mode}><option value="manual">Manual</option><option value="auto">Auto</option></select>
       </div>
     {/each}

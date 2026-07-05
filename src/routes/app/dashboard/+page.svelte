@@ -3,7 +3,7 @@
   import ProgressCard from '$lib/components/app/ProgressCard.svelte';
   import EmptyState from '$lib/components/app/EmptyState.svelte';
   import { formatIDR } from '$lib/utils/money';
-  import { ArrowDownCircle, ArrowUpCircle, Landmark, Plus, ReceiptText, ScanLine, TrendingUp, WalletCards } from '@lucide/svelte';
+  import { ArrowDownCircle, Landmark, Plus, ReceiptText, ScanLine, TrendingUp, WalletCards } from '@lucide/svelte';
   export let data: any;
   $: d = data.dashboard;
   $: dailyPct = d.dailyBudget.budget > 0 ? Math.min(100, Math.round((d.dailyBudget.spent / d.dailyBudget.budget) * 100)) : 0;
@@ -40,6 +40,14 @@
         </div>
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
           <div class="summary-tile summary-tile-dark text-paper">
+            <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Sisa bulan lalu</p>
+            <p class="mt-2 text-lg font-black">{formatIDR(d.openingBalance ?? 0)}</p>
+          </div>
+          <div class="summary-tile summary-tile-dark text-paper">
+            <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Saldo tersedia</p>
+            <p class="mt-2 text-lg font-black">{formatIDR(d.availableBalance ?? d.netCashflow)}</p>
+          </div>
+          <div class="summary-tile summary-tile-dark text-paper">
             <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Bulan masuk</p>
             <p class="mt-2 text-lg font-black">{formatIDR(d.monthIncome)}</p>
           </div>
@@ -66,9 +74,9 @@
 
   <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
     <MoneyCard label="Uang keluar hari ini" amount={d.todayExpense} insight="Pantau yang kecil sebelum jadi besar." icon={ArrowDownCircle} />
-    <MoneyCard label="Uang masuk bulan ini" amount={d.monthIncome} insight="Pemasukan bulan berjalan." tone="sky-soft" icon={ArrowUpCircle} />
+    <MoneyCard label="Sisa bulan lalu" amount={d.openingBalance ?? 0} insight="Saldo bawaan otomatis dari transaksi sebelumnya." tone="sky-soft" icon={WalletCards} />
     <MoneyCard label="Uang keluar bulan ini" amount={d.monthExpense} insight="Pengeluaran konsumtif bulan ini." tone="clay" icon={ReceiptText} />
-    <MoneyCard label="Net cashflow" amount={d.netCashflow} insight={d.netCashflow >= 0 ? 'Arus kas masih positif.' : 'Perlu dirapikan pelan-pelan.'} tone="amber-soft" icon={TrendingUp} />
+    <MoneyCard label="Saldo tersedia" amount={d.availableBalance ?? d.netCashflow} insight={(d.availableBalance ?? d.netCashflow) >= 0 ? 'Sudah termasuk sisa bulan sebelumnya.' : 'Saldo berjalan masih minus.'} tone="amber-soft" icon={TrendingUp} />
   </div>
 
   <div class="grid gap-3 lg:grid-cols-3">

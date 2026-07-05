@@ -14,7 +14,7 @@ export async function GET(event) {
   return new Response(csv, {
     headers: {
       'content-type': 'text/csv; charset=utf-8',
-      'content-disposition': 'attachment; filename="transactions.csv"'
+      'content-disposition': `attachment; filename="memoney-transaksi-${event.url.searchParams.get('from') ?? fallback.from}-${event.url.searchParams.get('to') ?? fallback.to}.csv"`
     }
   });
 }

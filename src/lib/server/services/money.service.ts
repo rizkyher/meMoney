@@ -19,6 +19,28 @@ export function statusFor(budget: number, spent: number): BudgetStatus['status']
   return 'safe';
 }
 
+export function calculateRunningBalance(openingBalance: number, income: number, expense: number) {
+  return openingBalance + income - expense;
+}
+
+export async function getBalanceBefore(db: D1Database, userId: string, beforeDate: string) {
+  const row = await db
+    .prepare(
+      `SELECT COALESCE(SUM(
+        CASE
+          WHEN type = 'income' THEN amount
+          WHEN type = 'expense' THEN -amount
+          ELSE 0
+        END
+      ), 0) AS balance
+      FROM transactions
+      WHERE user_id = ? AND deleted_at IS NULL AND transaction_date < ?`
+    )
+    .bind(userId, beforeDate)
+    .first<{ balance: number }>();
+  return row?.balance ?? 0;
+}
+
 export async function calculateBudgetStatus(db: D1Database, userId: string, period: 'daily' | 'weekly' | 'monthly') {
   const range = period === 'daily' ? getTodayRange() : period === 'weekly' ? getWeekRange() : getMonthRange();
   const spent = await sumTransactions(db, userId, range.from, range.to, 'expense');

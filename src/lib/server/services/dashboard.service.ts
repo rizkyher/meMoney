@@ -1,15 +1,16 @@
 import { getMonthRange, getTodayRange } from '$lib/utils/date';
 import { percentage } from '$lib/utils/money';
 import { sumTransactions, listTransactions } from '$lib/server/repositories/transactions.repo';
-import { calculateBudgetStatus } from './money.service';
+import { calculateBudgetStatus, calculateRunningBalance, getBalanceBefore } from './money.service';
 
 export async function getDashboard(db: D1Database, user: { id: string; name: string }) {
   const today = getTodayRange();
   const month = getMonthRange();
-  const [todayExpense, monthIncome, monthExpense, dailyBudget, weeklyBudget, monthlyBudget, goals, emergency, recent] = await Promise.all([
+  const [todayExpense, monthIncome, monthExpense, openingBalance, dailyBudget, weeklyBudget, monthlyBudget, goals, emergency, recent] = await Promise.all([
     sumTransactions(db, user.id, today.from, today.to, 'expense'),
     sumTransactions(db, user.id, month.from, month.to, 'income'),
     sumTransactions(db, user.id, month.from, month.to, 'expense'),
+    getBalanceBefore(db, user.id, month.from),
     calculateBudgetStatus(db, user.id, 'daily'),
     calculateBudgetStatus(db, user.id, 'weekly'),
     calculateBudgetStatus(db, user.id, 'monthly'),
@@ -24,6 +25,8 @@ export async function getDashboard(db: D1Database, user: { id: string; name: str
     monthIncome,
     monthExpense,
     netCashflow: monthIncome - monthExpense,
+    openingBalance,
+    availableBalance: calculateRunningBalance(openingBalance, monthIncome, monthExpense),
     dailyBudget,
     weeklyBudget,
     monthlyBudget,

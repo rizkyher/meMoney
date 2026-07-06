@@ -22,7 +22,7 @@
     <a class="btn-primary w-full sm:w-auto" href={exportHref}><Download size={18} /> Export CSV</a>
   </div>
 
-  <section class="metric-card">
+  <section class="surface-panel p-4 md:p-5">
     <div class="mb-3 flex items-center gap-2 text-sm font-black text-moss">
       <CalendarDays size={18} />
       Rentang laporan
@@ -89,7 +89,7 @@
     {:else}
       <div class="space-y-3 md:hidden">
         {#each data.transactions as trx}
-          <article class="metric-card flex items-start justify-between gap-3">
+          <article class="list-row flex items-start justify-between gap-3 p-4">
             <div class="min-w-0">
               <p class="truncate font-black">{trx.title || trx.merchant || (trx.type === 'income' ? 'Uang masuk' : 'Uang keluar')}</p>
               <p class="mt-1 text-sm text-muted">{trx.transaction_date} · {trx.source === 'scan' ? 'Scan OCR' : 'Manual'}</p>
@@ -102,7 +102,7 @@
         {/each}
       </div>
 
-      <div class="metric-card hidden overflow-x-auto p-0 md:block">
+      <div class="surface-panel hidden overflow-x-auto p-0 md:block">
         <table class="w-full min-w-[760px] border-collapse text-left text-sm">
           <thead class="border-b border-moss/10 bg-cream/40 text-xs font-black uppercase tracking-wide text-muted">
             <tr>

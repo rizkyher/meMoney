@@ -55,8 +55,8 @@
   }
 </script>
 
-<section class="grid gap-5 lg:grid-cols-[380px_1fr]">
-  <form class="card h-fit space-y-4 p-4 md:p-5" on:submit|preventDefault={create}>
+<section class="grid gap-5 lg:grid-cols-[390px_1fr]">
+  <form class="surface-panel h-fit space-y-4 p-4 md:p-5" on:submit|preventDefault={create}>
     <div>
       <p class="section-label">Tabungan</p>
       <h1 class="page-title mt-1 flex items-center gap-2"><PiggyBank size={26} /> {editingId ? 'Edit goal' : 'Goals'}</h1>
@@ -75,13 +75,13 @@
   </form>
   <div class="space-y-3">
     {#each data.goals as goal}
-      <article class="card p-4 transition hover:border-moss/25">
+      <article class="list-row p-4">
         <div class="flex justify-between gap-3">
           <div class="min-w-0"><p class="truncate font-black">{goal.name}</p><p class="text-sm text-muted">{formatIDR(goal.current_amount)} dari {formatIDR(goal.target_amount)}</p></div>
           <div class="flex shrink-0 items-center gap-2">
             <p class="font-black text-moss">{goal.target_amount ? Math.round(goal.current_amount / goal.target_amount * 100) : 0}%</p>
-            <button class="grid size-9 place-items-center rounded-lg border border-moss/10 bg-cream/60 text-moss" type="button" aria-label="Edit goal" on:click={() => editGoal(goal)}><Pencil size={16} /></button>
-            <button class="grid size-9 place-items-center rounded-lg border border-moss/10 bg-paper text-clay" type="button" aria-label="Hapus goal" on:click={() => deleteGoal(goal.id)}><Trash2 size={16} /></button>
+            <button class="icon-button" type="button" aria-label="Edit goal" on:click={() => editGoal(goal)}><Pencil size={16} /></button>
+            <button class="icon-button text-clay" type="button" aria-label="Hapus goal" on:click={() => deleteGoal(goal.id)}><Trash2 size={16} /></button>
           </div>
         </div>
         <div class="mt-3 h-3 overflow-hidden rounded-full bg-stone-soft"><div class="h-full bg-moss" style={`width:${goal.target_amount ? Math.min(100, goal.current_amount / goal.target_amount * 100) : 0}%`}></div></div>

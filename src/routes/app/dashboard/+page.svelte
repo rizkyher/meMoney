@@ -11,18 +11,28 @@
 
 <section class="space-y-4 md:space-y-5">
   <section class="hero-card p-4 sm:p-5 md:p-6">
-    <div class="relative grid min-w-0 gap-5 lg:grid-cols-[1.25fr_.9fr] lg:items-stretch">
-      <div class="flex min-w-0 flex-col justify-between gap-6 lg:min-h-[272px]">
+    <div class="relative grid min-w-0 gap-5 xl:grid-cols-[1.1fr_.9fr] xl:items-stretch">
+      <div class="flex min-w-0 flex-col justify-between gap-7 xl:min-h-[300px]">
         <div>
-          <div class="hero-chip"><WalletCards size={15} /> Dashboard</div>
-          <h1 class="mt-4 max-w-[13ch] text-3xl font-black leading-tight sm:max-w-none md:text-4xl">Sisa jatah hari ini</h1>
-          <p class="mt-2 max-w-xl text-sm leading-6 text-stone-soft">{d.greeting}. Fokus pada uang yang masih aman dipakai hari ini.</p>
+          <div class="hero-chip"><WalletCards size={15} /> Finance cockpit</div>
+          <h1 class="mt-4 max-w-[12ch] text-3xl font-black leading-tight sm:max-w-none md:text-5xl">Saldo tersedia</h1>
+          <p class="mt-2 max-w-xl text-sm font-semibold leading-6 text-stone-soft">{d.greeting}. Semua angka penting hari ini diringkas untuk keputusan cepat.</p>
         </div>
 
-        <div class="min-w-0">
-          <p class="text-sm font-bold uppercase tracking-wide text-sky-soft">Remaining allowance</p>
-          <p class="money-hero-number mt-2 font-black">{formatIDR(d.dailyBudget.remaining)}</p>
-          <div class="mt-5 h-2 overflow-hidden rounded-full bg-paper/20">
+        <div class="min-w-0 rounded-3xl border border-paper/15 bg-paper/10 p-4">
+          <p class="text-xs font-black uppercase tracking-wide text-sky-soft">Running balance</p>
+          <p class="money-hero-number mt-2 font-black">{formatIDR(d.availableBalance ?? d.netCashflow)}</p>
+          <div class="mt-5 grid gap-3 sm:grid-cols-2">
+            <div>
+              <p class="text-xs font-black uppercase tracking-wide text-sky-soft">Jatah hari ini</p>
+              <p class="mt-1 text-2xl font-black">{formatIDR(d.dailyBudget.remaining)}</p>
+            </div>
+            <div>
+              <p class="text-xs font-black uppercase tracking-wide text-sky-soft">Status</p>
+              <p class="mt-1 text-2xl font-black">{d.dailyBudget.remaining >= 0 ? 'Aman' : 'Lewat'}</p>
+            </div>
+          </div>
+          <div class="mt-4 h-2 overflow-hidden rounded-full bg-paper/20">
             <div class="h-full rounded-full bg-sky-soft" style={`width:${dailyPct}%`}></div>
           </div>
           <div class="mt-3 flex min-w-0 flex-wrap gap-x-2 gap-y-1 text-xs font-bold leading-5 text-stone-soft">
@@ -32,31 +42,26 @@
         </div>
       </div>
 
-      <aside class="grid min-w-0 gap-3">
-        <div class="summary-tile summary-tile-dark text-paper">
-          <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Status</p>
-          <p class="mt-2 text-xl font-black">{d.dailyBudget.remaining >= 0 ? 'Aman sampai malam' : 'Perlu rem kecil'}</p>
-          <p class="mt-1 text-sm text-stone-soft">{d.dailyBudget.remaining >= 0 ? 'Ritme hari ini masih terkendali.' : 'Sedikit lewat budget. Rapikan lagi besok.'}</p>
-        </div>
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
+      <aside class="grid min-w-0 content-between gap-3">
+        <div class="grid gap-3 sm:grid-cols-2">
           <div class="summary-tile summary-tile-dark text-paper">
-            <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Sisa bulan lalu</p>
-            <p class="mt-2 text-lg font-black">{formatIDR(d.openingBalance ?? 0)}</p>
+            <p class="text-xs font-black uppercase tracking-wide text-sky-soft">Sisa bulan lalu</p>
+            <p class="mt-2 text-xl font-black">{formatIDR(d.openingBalance ?? 0)}</p>
           </div>
           <div class="summary-tile summary-tile-dark text-paper">
-            <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Saldo tersedia</p>
-            <p class="mt-2 text-lg font-black">{formatIDR(d.availableBalance ?? d.netCashflow)}</p>
+            <p class="text-xs font-black uppercase tracking-wide text-sky-soft">Bulan masuk</p>
+            <p class="mt-2 text-xl font-black">{formatIDR(d.monthIncome)}</p>
           </div>
           <div class="summary-tile summary-tile-dark text-paper">
-            <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Bulan masuk</p>
-            <p class="mt-2 text-lg font-black">{formatIDR(d.monthIncome)}</p>
+            <p class="text-xs font-black uppercase tracking-wide text-sky-soft">Bulan keluar</p>
+            <p class="mt-2 text-xl font-black">{formatIDR(d.monthExpense)}</p>
           </div>
           <div class="summary-tile summary-tile-dark text-paper">
-            <p class="text-xs font-bold uppercase tracking-wide text-sky-soft">Bulan keluar</p>
-            <p class="mt-2 text-lg font-black">{formatIDR(d.monthExpense)}</p>
+            <p class="text-xs font-black uppercase tracking-wide text-sky-soft">Hari ini</p>
+            <p class="mt-2 text-xl font-black">{formatIDR(d.todayExpense)}</p>
           </div>
         </div>
-        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+        <div class="grid gap-2 sm:grid-cols-2">
           <a class="hero-action hero-action-primary" href="/app/transactions"><Plus size={18} /> Catat cepat</a>
           <a class="hero-action hero-action-secondary" href="/app/scan"><ScanLine size={18} /> Scan bukti</a>
         </div>
@@ -93,9 +98,9 @@
     {#if d.recent.length === 0}
       <EmptyState title="Belum ada transaksi" body="Catat pemasukan atau pengeluaran pertama hari ini." />
     {:else}
-      <div class="space-y-3">
+      <div class="space-y-2.5">
         {#each d.recent as trx}
-          <article class="metric-card flex items-center justify-between gap-3">
+          <article class="list-row flex items-center justify-between gap-3 p-3.5">
             <div class="min-w-0">
               <p class="truncate font-bold">{trx.title || trx.merchant || (trx.type === 'income' ? 'Uang masuk' : 'Uang keluar')}</p>
               <p class="text-sm text-muted">{trx.transaction_date}</p>

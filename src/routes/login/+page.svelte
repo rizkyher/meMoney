@@ -10,13 +10,15 @@
   const buttonText = $derived(isSetup ? 'Buat akun' : isRegister ? 'Daftar dan masuk' : 'Masuk');
 </script>
 
-<main class="relative grid min-h-dvh place-items-center overflow-hidden bg-cream px-4 py-8 text-ink">
-  <div class="hill hill-a"></div>
-  <div class="hill hill-b"></div>
-  <section class="glass-panel z-10 w-full max-w-md rounded-3xl p-6">
-    <img class="mb-5 h-auto w-52 max-w-full" src="/logo/memoney_logo_horizontal_light_transparent_2000.png" alt="meMoney" />
-    <h1 class="mt-2 text-3xl font-bold">{title}</h1>
-    <p class="mt-2 text-sm text-muted">{isRegister ? 'Buat akun pribadi baru dengan ruang data sendiri.' : 'Scan dulu, nanti kamu cek sebelum disimpan.'}</p>
+<main class="grid min-h-dvh place-items-center bg-cream px-4 py-8 text-ink">
+  <section class="glass-panel w-full max-w-md overflow-hidden p-0">
+    <div class="bg-ink px-6 py-6 text-paper">
+      <img class="h-auto w-48 max-w-full" src="/logo/memoney_logo_horizontal_light_transparent_2000.png" alt="meMoney" />
+      <p class="mt-5 text-xs font-black uppercase tracking-wide text-stone-soft">Private money workspace</p>
+      <h1 class="mt-2 text-3xl font-black leading-tight">{title}</h1>
+      <p class="mt-2 text-sm leading-6 text-stone-soft">{isRegister ? 'Buat akun pribadi baru dengan ruang data sendiri.' : 'Masuk untuk lanjut mencatat, scan, dan merapikan cashflow.'}</p>
+    </div>
+    <div class="p-5 md:p-6">
     {#if !isSetup}
       <div class="mt-5 grid grid-cols-2 rounded-xl bg-cream/60 p-1 text-sm font-black">
         <a class="rounded-lg px-3 py-2 text-center transition {data.mode === 'login' ? 'bg-paper text-ink shadow-sm' : 'text-muted'}" href="/login">Masuk</a>
@@ -37,5 +39,6 @@
       <div class="relative"><LockKeyhole class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={18} /><input class="input pl-10" id="password" name="password" type="password" autocomplete={passwordAutocomplete} minlength="8" required /></div>
       <button class="btn-primary w-full" type="submit"><LockKeyhole size={18} /> {buttonText}</button>
     </form>
+    </div>
   </section>
 </main>

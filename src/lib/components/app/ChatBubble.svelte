@@ -85,17 +85,19 @@
 
 <div class="fixed bottom-24 right-4 z-40 md:bottom-5 md:right-5">
   {#if open}
-    <section class="mb-3 w-[calc(100vw-2rem)] max-w-sm rounded-2xl border border-moss/15 bg-paper p-3 shadow-2xl">
-      <div class="mb-3 flex items-start justify-between gap-3">
-        <div class="min-w-0">
-          <p class="flex items-center gap-2 text-sm font-black text-moss"><Bot size={17} /> Chat transaksi</p>
-          <p class="mt-1 text-xs leading-5 text-muted">Ketik singkat, lalu simpan langsung.</p>
+    <section class="mb-3 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-3xl border border-moss/15 bg-paper/95 shadow-2xl backdrop-blur-xl">
+      <div class="bg-moss px-4 py-3 text-paper">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="flex items-center gap-2 text-sm font-black"><Bot size={17} /> Chat transaksi</p>
+            <p class="mt-1 text-xs leading-5 text-stone-soft">Ketik singkat, lalu simpan langsung.</p>
+          </div>
+          <button class="grid size-9 shrink-0 place-items-center rounded-xl border border-paper/15 bg-paper/10" type="button" aria-label="Tutup chat" onclick={() => (open = false)}>
+            <X size={17} />
+          </button>
         </div>
-        <button class="grid size-9 shrink-0 place-items-center rounded-lg border border-moss/10 bg-cream/70" type="button" aria-label="Tutup chat" onclick={() => (open = false)}>
-          <X size={17} />
-        </button>
       </div>
-
+      <div class="p-3">
       <textarea
         class="input min-h-20 resize-none"
         bind:value={message}
@@ -136,11 +138,12 @@
       {/if}
 
       <p class="mt-3 text-center text-[11px] font-bold text-muted">Ctrl/⌘ + Enter untuk simpan cepat</p>
+      </div>
     </section>
   {/if}
 
   <button
-    class="grid size-14 place-items-center rounded-2xl bg-moss text-paper shadow-2xl transition hover:bg-ink"
+    class="grid size-14 place-items-center rounded-3xl bg-moss text-paper shadow-2xl ring-4 ring-paper/70 transition hover:bg-ink md:size-16"
     type="button"
     aria-label="Buka chat transaksi"
     onclick={() => (open = !open)}

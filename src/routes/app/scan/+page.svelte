@@ -107,17 +107,17 @@
     <p class="mt-2 text-sm text-muted">OCR berjalan di browser. Lampiran hanya naik ke cloud saat kamu pilih simpan bukti.</p>
   </div>
 
-  <div class="card space-y-4 p-4 md:p-5">
-    <label class="flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-moss/25 bg-paper p-8 text-center transition hover:border-moss/50 hover:bg-sky-soft/15">
-      <span class="grid size-12 place-items-center rounded-lg bg-sky-soft/35 text-moss"><FileImage size={26} /></span>
+  <div class="surface-panel space-y-4 p-4 md:p-5">
+    <label class="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-moss/25 bg-paper/80 p-8 text-center transition hover:border-moss/50 hover:bg-sky-soft/15">
+      <span class="metric-icon"><FileImage size={26} /></span>
       <span class="mt-4 text-lg font-black">Upload gambar, PDF, atau file teks</span>
       <span class="mt-1 text-sm text-muted">PDF dibaca di browser. Maksimal 3 halaman pertama dan 12 MB.</span>
       <input class="sr-only" type="file" {accept} capture="environment" on:change={choose} />
     </label>
     {#if preview}<img class="max-h-80 w-full rounded-lg object-contain" src={preview} alt="Preview bukti transaksi" />{/if}
     {#if file && !isImage}
-      <div class="flex items-center gap-3 rounded-lg border border-moss/10 bg-cream/60 p-4">
-        <span class="grid size-11 place-items-center rounded-lg bg-sky-soft/35 text-moss">{#if isPdf}<FileText size={22} />{:else}<FileImage size={22} />{/if}</span>
+      <div class="list-row flex items-center gap-3 p-4">
+        <span class="metric-icon">{#if isPdf}<FileText size={22} />{:else}<FileImage size={22} />{/if}</span>
         <div class="min-w-0">
           <p class="truncate font-black">{file.name}</p>
           <p class="text-sm text-muted">{isPdf ? 'PDF akan dirender lalu di-OCR.' : 'Teks akan dibaca langsung.'} {fileDescription}</p>
@@ -129,7 +129,7 @@
   </div>
 
   {#if draft}
-    <section class="card space-y-4 p-5">
+    <section class="surface-panel space-y-4 p-5">
       <div>
         <h2 class="text-xl font-black">Review hasil scan</h2>
         {#if draft.confidence < 0.7}<p class="mt-1 text-sm text-clay">Hasil scan belum yakin. Cek nominalnya dulu ya.</p>{/if}
@@ -141,9 +141,9 @@
         <label><span class="field-label">Merchant</span><input class="input" bind:value={draft.merchant} /></label>
       </div>
       <label><span class="field-label">Catatan</span><textarea class="input min-h-24" bind:value={draft.note}></textarea></label>
-      <label class="flex items-center gap-3 rounded-lg bg-stone-soft/60 p-3 text-sm font-bold"><input type="checkbox" bind:checked={saveImage} /> <CloudUpload size={18} /> Simpan file bukti ke cloud</label>
+      <label class="list-row flex items-center gap-3 p-3 text-sm font-bold"><input type="checkbox" bind:checked={saveImage} /> <CloudUpload size={18} /> Simpan file bukti ke cloud</label>
       <p class="flex items-center gap-2 text-sm text-muted"><ShieldCheck size={16} /> Tidak ada auto-save. Kamu tetap pegang keputusan terakhir.</p>
-      <details class="rounded-lg bg-cream/70 p-3 text-sm"><summary class="font-bold">OCR raw text</summary><pre class="mt-3 whitespace-pre-wrap">{rawText}</pre></details>
+      <details class="rounded-xl bg-cream/70 p-3 text-sm"><summary class="font-bold">OCR raw text</summary><pre class="mt-3 whitespace-pre-wrap">{rawText}</pre></details>
       <button class="btn-primary w-full" on:click={save}><CheckCircle2 size={18} /> Simpan transaksi hasil scan</button>
     </section>
   {/if}

@@ -56,15 +56,15 @@
 </script>
 
 <section class="mx-auto max-w-3xl space-y-5">
-  <div class="card p-5">
+  <div class="hero-card p-5">
     <p class="section-label">Dana Tak Terduga</p>
     <h1 class="page-title mt-1 flex items-center gap-3"><ShieldCheck size={28} /> Dana tak terduga</h1>
-    <p class="mt-2 text-sm text-muted">Pisahkan dana aman dari tabungan biasa.</p>
-    <p class="mt-3 text-4xl font-black text-moss">{pct}%</p>
-    <p class="text-muted">{status}: {formatIDR(total)} dari {formatIDR(target)}</p>
-    <div class="mt-4 h-4 overflow-hidden rounded-full bg-stone-soft"><div class="h-full bg-moss" style={`width:${Math.min(100, pct)}%`}></div></div>
+    <p class="mt-2 text-sm text-stone-soft">Pisahkan dana aman dari tabungan biasa.</p>
+    <p class="mt-4 text-5xl font-black text-paper">{pct}%</p>
+    <p class="mt-1 text-sm font-bold text-stone-soft">{status}: {formatIDR(total)} dari {formatIDR(target)}</p>
+    <div class="mt-4 h-4 overflow-hidden rounded-full bg-paper/15"><div class="h-full bg-sky-soft" style={`width:${Math.min(100, pct)}%`}></div></div>
   </div>
-  <form class="card grid gap-3 p-4 md:p-5 sm:grid-cols-[1fr_1fr_auto]" on:submit|preventDefault={create}>
+  <form class="surface-panel grid gap-3 p-4 md:p-5 sm:grid-cols-[1fr_1fr_auto]" on:submit|preventDefault={create}>
     <MoneyInput id="emergency-target" label="Target" bind:value={target_amount} placeholder="3.000.000" required />
     <MoneyInput id="emergency-current" label={editingId ? 'Saldo sekarang' : 'Saldo awal'} bind:value={current_amount} chips={[]} />
     <button class="btn-primary">{#if editingId}<Save size={18} /> Update{:else}<ShieldCheck size={18} /> Simpan{/if}</button>
@@ -75,14 +75,14 @@
   </form>
   <div class="space-y-3">
     {#each data.goals as goal}
-      <article class="card flex items-center justify-between gap-3 p-4">
+      <article class="list-row flex items-center justify-between gap-3 p-4">
         <div class="min-w-0">
           <p class="font-black">{formatIDR(goal.current_amount)}</p>
           <p class="text-sm text-muted">Target {formatIDR(goal.target_amount)}</p>
         </div>
         <div class="flex shrink-0 items-center gap-2">
-          <button class="grid size-10 place-items-center rounded-lg border border-moss/10 bg-cream/60 text-moss" type="button" aria-label="Edit dana tak terduga" on:click={() => editGoal(goal)}><Pencil size={17} /></button>
-          <button class="grid size-10 place-items-center rounded-lg border border-moss/10 bg-paper text-clay" type="button" aria-label="Hapus dana tak terduga" on:click={() => deleteGoal(goal.id)}><Trash2 size={17} /></button>
+          <button class="icon-button" type="button" aria-label="Edit dana tak terduga" on:click={() => editGoal(goal)}><Pencil size={17} /></button>
+          <button class="icon-button text-clay" type="button" aria-label="Hapus dana tak terduga" on:click={() => deleteGoal(goal.id)}><Trash2 size={17} /></button>
         </div>
       </article>
     {/each}

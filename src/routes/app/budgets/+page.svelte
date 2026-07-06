@@ -55,13 +55,13 @@
   }
 </script>
 
-<section class="mx-auto max-w-3xl space-y-5">
+<section class="mx-auto max-w-4xl space-y-5">
   <div>
     <p class="section-label">Budget</p>
     <h1 class="page-title mt-1 flex items-center gap-3"><BadgeDollarSign size={28} /> Atur jatah harian, mingguan, dan bulanan</h1>
     <p class="mt-2 text-sm text-muted">Isi satu jatah manual, lalu periode lain bisa otomatis mengikuti hitungan harian, mingguan, atau bulanan.</p>
   </div>
-  <div class="metric-card flex items-start gap-3 bg-sky-soft/25">
+  <div class="surface-panel flex items-start gap-3 p-4 md:p-5">
     <span class="metric-icon"><Calculator size={18} /></span>
     <div class="min-w-0">
       <p class="font-black">Auto budget saling terhubung</p>
@@ -69,14 +69,14 @@
     </div>
   </div>
 
-  <div class="card space-y-4 p-4 md:p-5">
+  <div class="surface-panel space-y-4 p-4 md:p-5">
     {#each rows as row}
-      <div class="grid gap-4 rounded-lg border border-moss/10 bg-cream/55 p-4 sm:grid-cols-[1fr_230px_140px]">
+      <div class="list-row grid gap-4 p-4 sm:grid-cols-[1fr_230px_140px]">
         <div class="min-w-0">
           <div class="flex flex-wrap items-center gap-2">
             <p class="font-black">{labels[row.period]}</p>
             {#if row.mode === 'auto'}
-              <span class="inline-flex items-center gap-1 rounded-full bg-sky-soft/35 px-2.5 py-1 text-xs font-black text-ink"><Lock size={13} /> Auto</span>
+              <span class="status-pill"><Lock size={13} /> Auto</span>
             {/if}
           </div>
           <p class="mt-1 text-sm text-muted">{periodCopy[row.period]}</p>

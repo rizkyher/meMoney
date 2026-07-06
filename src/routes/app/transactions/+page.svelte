@@ -179,9 +179,9 @@
   }
 </script>
 
-<section class="grid gap-4 lg:grid-cols-[minmax(320px,400px)_1fr]">
+<section class="grid gap-4 xl:grid-cols-[minmax(340px,420px)_1fr]">
   <div class="space-y-4">
-  <section class="card space-y-4 p-4 md:p-5">
+  <section class="surface-panel space-y-4 p-4 md:p-5">
     <div>
       <div class="flex items-center gap-2">
         <span class="metric-icon"><Bot size={18} /></span>
@@ -220,7 +220,7 @@
     {/if}
   </section>
 
-  <form class="card h-fit space-y-4 p-4 md:p-5" on:submit|preventDefault={submit}>
+  <form class="surface-panel h-fit space-y-4 p-4 md:p-5" on:submit|preventDefault={submit}>
     <div>
       <p class="section-label">Transaksi</p>
       <h1 class="page-title mt-1">{editingId ? 'Edit transaksi' : 'Catat cepat'}</h1>
@@ -228,8 +228,8 @@
     </div>
     {#if error}<p class="rounded-2xl bg-rose-soft/30 p-3 text-sm">{error}</p>{/if}
     <div class="grid grid-cols-2 gap-2">
-      <button type="button" class="btn-secondary {type === 'expense' ? 'bg-clay/20 border-clay/40' : ''}" on:click={() => (type = 'expense')}><ArrowDownCircle size={18} /> Uang keluar</button>
-      <button type="button" class="btn-secondary {type === 'income' ? 'bg-sage/30 border-moss/40' : ''}" on:click={() => (type = 'income')}><ArrowUpCircle size={18} /> Uang masuk</button>
+      <button type="button" class="btn-secondary {type === 'expense' ? 'bg-clay/20 border-clay/40 shadow-soft' : ''}" on:click={() => (type = 'expense')}><ArrowDownCircle size={18} /> Uang keluar</button>
+      <button type="button" class="btn-secondary {type === 'income' ? 'bg-sage/30 border-moss/40 shadow-soft' : ''}" on:click={() => (type = 'income')}><ArrowUpCircle size={18} /> Uang masuk</button>
     </div>
     <MoneyInput id="amount" label="Nominal" bind:value={amount} large required />
     <div>
@@ -263,14 +263,14 @@
   </div>
 
   <section class="space-y-3">
-    <div class="flex items-end justify-between gap-3">
+    <div class="surface-panel flex items-end justify-between gap-3 p-4">
       <div>
         <p class="section-label">History</p>
         <h2 class="text-xl font-black">Transaksi bulan ini</h2>
       </div>
     </div>
     {#each data.transactions as trx}
-      <article class="card flex items-center justify-between gap-3 p-3.5">
+      <article class="list-row flex items-center justify-between gap-3 p-3.5">
         <div class="min-w-0">
           <p class="truncate font-bold">{trx.title || trx.merchant || (trx.type === 'income' ? 'Uang masuk' : 'Uang keluar')}</p>
           <p class="text-sm text-muted">{trx.transaction_date}{trx.note ? ` · ${trx.note}` : ''}</p>

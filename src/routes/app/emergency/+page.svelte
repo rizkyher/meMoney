@@ -55,34 +55,34 @@
   }
 </script>
 
-<section class="mx-auto max-w-3xl space-y-5">
-  <div class="hero-card p-5">
+<section class="mx-auto min-w-0 max-w-3xl space-y-3 md:space-y-5">
+  <div class="hero-card min-w-0 p-4 md:p-5">
     <p class="section-label">Dana Tak Terduga</p>
-    <h1 class="page-title mt-1 flex items-center gap-3"><ShieldCheck size={28} /> Dana tak terduga</h1>
-    <p class="mt-2 text-sm text-stone-soft">Pisahkan dana aman dari tabungan biasa.</p>
-    <p class="mt-4 text-5xl font-black text-paper">{pct}%</p>
-    <p class="mt-1 text-sm font-bold text-stone-soft">{status}: {formatIDR(total)} dari {formatIDR(target)}</p>
+    <h1 class="page-title mt-1 flex min-w-0 items-center gap-2 md:gap-3"><ShieldCheck class="shrink-0" size={26} /> <span class="min-w-0">Dana tak terduga</span></h1>
+    <p class="mt-1 text-sm text-stone-soft md:mt-2">Pisahkan dana aman dari tabungan biasa.</p>
+    <p class="mt-4 text-4xl font-black text-paper md:text-5xl">{pct}%</p>
+    <p class="mt-1 break-words text-sm font-bold text-stone-soft">{status}: {formatIDR(total)} dari {formatIDR(target)}</p>
     <div class="mt-4 h-4 overflow-hidden rounded-full bg-paper/15"><div class="h-full bg-sky-soft" style={`width:${Math.min(100, pct)}%`}></div></div>
   </div>
-  <form class="surface-panel grid gap-3 p-4 md:p-5 sm:grid-cols-[1fr_1fr_auto]" on:submit|preventDefault={create}>
+  <form class="surface-panel grid min-w-0 gap-3 p-3.5 md:p-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]" on:submit|preventDefault={create}>
     <MoneyInput id="emergency-target" label="Target" bind:value={target_amount} placeholder="3.000.000" required />
     <MoneyInput id="emergency-current" label={editingId ? 'Saldo sekarang' : 'Saldo awal'} bind:value={current_amount} chips={[]} />
-    <button class="btn-primary">{#if editingId}<Save size={18} /> Update{:else}<ShieldCheck size={18} /> Simpan{/if}</button>
+    <button class="btn-primary w-full sm:self-end">{#if editingId}<Save size={18} /> Update{:else}<ShieldCheck size={18} /> Simpan{/if}</button>
     {#if editingId}
       <button class="btn-secondary sm:col-span-3" type="button" on:click={resetForm}><X size={18} /> Batal edit</button>
     {/if}
     {#if message}<p class="text-sm font-bold text-clay sm:col-span-3">{message}</p>{/if}
   </form>
-  <div class="space-y-3">
+  <div class="min-w-0 space-y-2.5 md:space-y-3">
     {#each data.goals as goal}
-      <article class="list-row flex items-center justify-between gap-3 p-4">
-        <div class="min-w-0">
+      <article class="list-row flex min-w-0 items-center justify-between gap-3 p-3.5 md:p-4">
+        <div class="min-w-0 flex-1">
           <p class="font-black">{formatIDR(goal.current_amount)}</p>
-          <p class="text-sm text-muted">Target {formatIDR(goal.target_amount)}</p>
+          <p class="break-words text-sm text-muted">Target {formatIDR(goal.target_amount)}</p>
         </div>
-        <div class="flex shrink-0 items-center gap-2">
-          <button class="icon-button" type="button" aria-label="Edit dana tak terduga" on:click={() => editGoal(goal)}><Pencil size={17} /></button>
-          <button class="icon-button text-clay" type="button" aria-label="Hapus dana tak terduga" on:click={() => deleteGoal(goal.id)}><Trash2 size={17} /></button>
+        <div class="flex shrink-0 items-center gap-1.5 md:gap-2">
+          <button class="icon-button size-9 md:size-10" type="button" aria-label="Edit dana tak terduga" on:click={() => editGoal(goal)}><Pencil size={16} /></button>
+          <button class="icon-button size-9 text-clay md:size-10" type="button" aria-label="Hapus dana tak terduga" on:click={() => deleteGoal(goal.id)}><Trash2 size={16} /></button>
         </div>
       </article>
     {/each}

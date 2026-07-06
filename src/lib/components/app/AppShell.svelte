@@ -1,9 +1,10 @@
 <script lang="ts">
   import BottomNav from './BottomNav.svelte';
+  import ChatBubble from './ChatBubble.svelte';
   import Sidebar from './Sidebar.svelte';
   import TopBar from './TopBar.svelte';
 
-  let { children, user } = $props();
+  let { children, user, csrfToken = '' } = $props();
 </script>
 
 <div class="app-root">
@@ -19,4 +20,5 @@
     </div>
   </div>
   <BottomNav />
+  <ChatBubble {csrfToken} />
 </div>

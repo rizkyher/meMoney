@@ -3,7 +3,7 @@
   import MoneyInput from '$lib/components/ui/MoneyInput.svelte';
   import { formatIDR } from '$lib/utils/money';
   import { toDateInput } from '$lib/utils/date';
-  import { ArrowDownCircle, ArrowUpCircle, CalendarDays, Pencil, Save, Trash2, X } from '@lucide/svelte';
+  import { ArrowDownCircle, ArrowUpCircle, Bot, CalendarDays, Pencil, Save, SendHorizonal, Sparkles, Trash2, X } from '@lucide/svelte';
   export let data: any;
   type Category = { id: string; name: string; type: string };
   type TransactionRow = {
@@ -25,6 +25,11 @@
   let saving = false;
   let error = '';
   let editingId = '';
+  let chatMessage = '';
+  let chatLoading = false;
+  let chatError = '';
+  let chatSaved = '';
+  let chatDraft: any = null;
 
   async function submit() {
     saving = true;
@@ -66,6 +71,98 @@
     error = '';
   }
 
+  async function saveTransactionPayload(payload: any) {
+    const res = await fetch('/api/transactions', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-csrf-token': data.csrfToken ?? '' },
+      body: JSON.stringify(payload)
+    });
+    const json: any = await res.json();
+    if (!json.ok) throw new Error(json.error.message);
+    return json.data;
+  }
+
+  async function parseChat(saveImmediately = false) {
+    const message = chatMessage.trim();
+    if (!message) return;
+    chatLoading = true;
+    chatError = '';
+    chatSaved = '';
+    chatDraft = null;
+    const res = await fetch('/api/chat/transaction', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-csrf-token': data.csrfToken ?? '' },
+      body: JSON.stringify({ message, today: toDateInput() })
+    });
+    const json: any = await res.json();
+    chatLoading = false;
+    if (!json.ok) {
+      chatError = json.error.message;
+      return;
+    }
+    if (saveImmediately) {
+      saving = true;
+      try {
+        await saveTransactionPayload(toTransactionPayload(json.data));
+        chatMessage = '';
+        chatSaved = 'Transaksi berhasil disimpan.';
+        resetForm();
+        await invalidateAll();
+      } catch (err) {
+        chatDraft = json.data;
+        applyChatDraft(json.data);
+        chatError = err instanceof Error ? err.message : 'Transaksi belum bisa disimpan.';
+      } finally {
+        saving = false;
+      }
+      return;
+    }
+    chatDraft = json.data;
+    applyChatDraft(json.data);
+  }
+
+  function applyChatDraft(draft: any) {
+    editingId = '';
+    type = draft.type;
+    amount = draft.amount;
+    transaction_date = draft.transaction_date;
+    category_id = draft.category_id ?? '';
+    title = draft.title ?? '';
+    note = draft.note ?? '';
+    error = '';
+  }
+
+  function toTransactionPayload(draft: any) {
+    return {
+      type: draft.type,
+      amount: draft.amount,
+      transaction_date: draft.transaction_date,
+      category_id: draft.category_id ?? null,
+      title: draft.title ?? '',
+      note: draft.note ?? '',
+      source: 'manual'
+    };
+  }
+
+  async function saveChatDraft() {
+    if (!chatDraft) return;
+    saving = true;
+    chatError = '';
+    chatSaved = '';
+    try {
+      await saveTransactionPayload(toTransactionPayload(chatDraft));
+      chatMessage = '';
+      chatDraft = null;
+      chatSaved = 'Transaksi berhasil disimpan.';
+      resetForm();
+      await invalidateAll();
+    } catch (err) {
+      chatError = err instanceof Error ? err.message : 'Transaksi belum bisa disimpan.';
+    } finally {
+      saving = false;
+    }
+  }
+
   async function deleteTransaction(id: string) {
     if (!confirm('Hapus transaksi ini?')) return;
     const res = await fetch(`/api/transactions/${id}`, {
@@ -83,6 +180,46 @@
 </script>
 
 <section class="grid gap-4 lg:grid-cols-[minmax(320px,400px)_1fr]">
+  <div class="space-y-4">
+  <section class="card space-y-4 p-4 md:p-5">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="metric-icon"><Bot size={18} /></span>
+        <p class="section-label">Chat AI</p>
+      </div>
+      <h2 class="mt-2 text-xl font-black">Catat pakai kalimat</h2>
+      <p class="mt-1 text-sm text-muted">Contoh: “makan bakso 20k”, “beli baju 100 ribu”, “terima gaji 5 juta”.</p>
+    </div>
+    <div class="space-y-2">
+      <input class="input" bind:value={chatMessage} placeholder="makan bakso 20k" on:keydown={(event) => event.key === 'Enter' && parseChat(false)} />
+      <div class="grid gap-2 sm:grid-cols-2">
+        <button class="btn-secondary w-full" type="button" disabled={chatLoading || !chatMessage.trim()} on:click={() => parseChat(false)}><SendHorizonal size={18} /> Cek draft</button>
+        <button class="btn-primary w-full" type="button" disabled={chatLoading || saving || !chatMessage.trim()} on:click={() => parseChat(true)}><Save size={18} /> {chatLoading || saving ? 'Menyimpan...' : 'Simpan langsung'}</button>
+      </div>
+    </div>
+    {#if chatSaved}
+      <p class="rounded-2xl bg-sage/25 p-3 text-sm font-bold text-moss">{chatSaved}</p>
+    {/if}
+    {#if chatError}
+      <p class="rounded-2xl bg-rose-soft/30 p-3 text-sm">{chatError}</p>
+    {/if}
+    {#if chatDraft}
+      <div class="rounded-2xl border border-moss/10 bg-paper/70 p-3">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="flex items-center gap-2 font-black"><Sparkles size={17} /> Draft siap dicek</p>
+            <p class="mt-1 text-sm text-muted">{chatDraft.title} · {chatDraft.category_hint} · {chatDraft.transaction_date}</p>
+          </div>
+          <p class="shrink-0 font-black {chatDraft.type === 'income' ? 'text-moss' : 'text-clay'}">{chatDraft.type === 'income' ? '+' : '-'}{formatIDR(chatDraft.amount)}</p>
+        </div>
+        <div class="mt-3 grid gap-2 sm:grid-cols-2">
+          <button class="btn-primary w-full" type="button" disabled={saving} on:click={saveChatDraft}><Save size={18} /> Simpan draft</button>
+          <button class="btn-secondary w-full" type="button" on:click={() => applyChatDraft(chatDraft)}><Pencil size={18} /> Edit dulu</button>
+        </div>
+      </div>
+    {/if}
+  </section>
+
   <form class="card h-fit space-y-4 p-4 md:p-5" on:submit|preventDefault={submit}>
     <div>
       <p class="section-label">Transaksi</p>
@@ -123,6 +260,7 @@
       {/if}
     </div>
   </form>
+  </div>
 
   <section class="space-y-3">
     <div class="flex items-end justify-between gap-3">

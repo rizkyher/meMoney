@@ -3,6 +3,6 @@
   let { children, data } = $props();
 </script>
 
-<AppShell user={data.user}>
+<AppShell user={data.user} csrfToken={data.csrfToken}>
   {@render children()}
 </AppShell>

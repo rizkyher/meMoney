@@ -5,34 +5,36 @@ import type { transactionSchema } from '$lib/server/validators/transaction.schem
 export type TransactionInput = z.infer<typeof transactionSchema>;
 
 export async function listTransactions(db: D1Database, userId: string, filters: { from?: string; to?: string; type?: string; category_id?: string; q?: string } = {}) {
-  const where = ['user_id = ?', 'deleted_at IS NULL'];
+  const where = ['transactions.user_id = ?', 'transactions.deleted_at IS NULL'];
   const values: unknown[] = [userId];
   if (filters.from) {
-    where.push('transaction_date >= ?');
+    where.push('transactions.transaction_date >= ?');
     values.push(filters.from);
   }
   if (filters.to) {
-    where.push('transaction_date <= ?');
+    where.push('transactions.transaction_date <= ?');
     values.push(filters.to);
   }
   if (filters.type) {
-    where.push('type = ?');
+    where.push('transactions.type = ?');
     values.push(filters.type);
   }
   if (filters.category_id) {
-    where.push('category_id = ?');
+    where.push('transactions.category_id = ?');
     values.push(filters.category_id);
   }
   if (filters.q) {
-    where.push('(title LIKE ? OR merchant LIKE ? OR note LIKE ?)');
+    where.push('(transactions.title LIKE ? OR transactions.merchant LIKE ? OR transactions.note LIKE ?)');
     values.push(`%${filters.q}%`, `%${filters.q}%`, `%${filters.q}%`);
   }
 
   return db
     .prepare(
-      `SELECT * FROM transactions
+      `SELECT transactions.*, COALESCE(categories.name, 'Lainnya') AS category_name
+       FROM transactions
+       LEFT JOIN categories ON categories.id = transactions.category_id
        WHERE ${where.join(' AND ')}
-       ORDER BY transaction_date DESC, created_at DESC
+       ORDER BY transactions.transaction_date DESC, transactions.created_at DESC
        LIMIT 200`
     )
     .bind(...values)

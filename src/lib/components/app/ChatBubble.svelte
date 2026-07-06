@@ -83,7 +83,7 @@
   }
 </script>
 
-<div class="fixed bottom-[5.75rem] right-4 z-30 md:bottom-5 md:right-5">
+<div class="fixed bottom-[7.25rem] right-4 z-30 md:bottom-5 md:right-5">
   {#if open}
     <section class="mb-3 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-3xl border border-moss/15 bg-paper/95 shadow-2xl backdrop-blur-xl">
       <div class="bg-moss px-4 py-3 text-paper">

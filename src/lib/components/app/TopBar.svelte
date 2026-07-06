@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Bell, Search } from '@lucide/svelte';
+  import { Search } from '@lucide/svelte';
   let { user } = $props();
 </script>
 
@@ -14,9 +14,6 @@
       <span>Cari transaksi, scan, atau rekap</span>
     </div>
     <div class="flex items-center gap-2">
-      <button class="grid size-9 place-items-center rounded-xl border border-moss/10 bg-paper/90 shadow-sm sm:size-10" type="button" aria-label="Notifikasi">
-        <Bell size={18} />
-      </button>
       <div class="max-w-24 truncate rounded-xl border border-moss/10 bg-paper/90 px-3 py-2 text-sm font-black shadow-sm sm:max-w-none">{user?.name ?? 'Rizky'}</div>
     </div>
   </div>

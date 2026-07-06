@@ -28,8 +28,38 @@ const monthMap: Record<string, number> = {
   dec: 12
 };
 
+export const APP_TIME_ZONE = 'Asia/Jakarta';
+
+function pad2(value: number) {
+  return String(value).padStart(2, '0');
+}
+
+function getZonedParts(date: Date, timeZone = APP_TIME_ZONE) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return {
+    year: Number(values.year),
+    month: Number(values.month),
+    day: Number(values.day)
+  };
+}
+
+function fromUtcDateOnly(year: number, month: number, day: number) {
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function formatDateOnly(date: Date) {
+  return `${date.getUTCFullYear()}-${pad2(date.getUTCMonth() + 1)}-${pad2(date.getUTCDate())}`;
+}
+
 export function toDateInput(date = new Date()) {
-  return date.toISOString().slice(0, 10);
+  const parts = getZonedParts(date);
+  return `${parts.year}-${pad2(parts.month)}-${pad2(parts.day)}`;
 }
 
 export function parseIndonesianDate(text: string, fallback = new Date()) {
@@ -49,9 +79,9 @@ export function parseIndonesianDate(text: string, fallback = new Date()) {
 }
 
 export function getMonthRange(date = new Date()) {
-  const start = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
-  const end = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0));
-  return { from: toDateInput(start), to: toDateInput(end) };
+  const { year, month } = getZonedParts(date);
+  const endDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  return { from: `${year}-${pad2(month)}-01`, to: `${year}-${pad2(month)}-${pad2(endDay)}` };
 }
 
 export function getTodayRange(date = new Date()) {
@@ -60,12 +90,11 @@ export function getTodayRange(date = new Date()) {
 }
 
 export function getWeekRange(date = new Date(), weekStartsOn: 'monday' | 'sunday' = 'monday') {
-  const current = new Date(date);
-  const day = current.getDay();
+  const currentParts = getZonedParts(date);
+  const current = fromUtcDateOnly(currentParts.year, currentParts.month, currentParts.day);
+  const day = current.getUTCDay();
   const startOffset = weekStartsOn === 'monday' ? (day === 0 ? -6 : 1 - day) : -day;
-  const start = new Date(current);
-  start.setDate(current.getDate() + startOffset);
-  const end = new Date(start);
-  end.setDate(start.getDate() + 6);
-  return { from: toDateInput(start), to: toDateInput(end) };
+  const start = fromUtcDateOnly(currentParts.year, currentParts.month, currentParts.day + startOffset);
+  const end = fromUtcDateOnly(start.getUTCFullYear(), start.getUTCMonth() + 1, start.getUTCDate() + 6);
+  return { from: formatDateOnly(start), to: formatDateOnly(end) };
 }

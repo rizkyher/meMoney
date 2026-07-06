@@ -3,7 +3,7 @@
   import MoneyInput from '$lib/components/ui/MoneyInput.svelte';
   import { formatIDR } from '$lib/utils/money';
   import { toDateInput } from '$lib/utils/date';
-  import { ArrowDownCircle, ArrowUpCircle, Bot, CalendarDays, Pencil, Save, SendHorizonal, Sparkles, Trash2, X } from '@lucide/svelte';
+  import { ArrowDownCircle, ArrowUpCircle, Bot, Pencil, Save, SendHorizonal, Sparkles, Trash2, X } from '@lucide/svelte';
   export let data: any;
   type Category = { id: string; name: string; type: string };
   type TransactionRow = {
@@ -179,9 +179,9 @@
   }
 </script>
 
-<section class="grid gap-4 xl:grid-cols-[minmax(340px,420px)_1fr]">
-  <div class="space-y-4">
-  <section class="surface-panel space-y-4 p-4 md:p-5">
+<section class="grid min-w-0 gap-3 md:gap-4 xl:grid-cols-[minmax(340px,420px)_1fr]">
+  <div class="min-w-0 space-y-3 md:space-y-4">
+  <section class="surface-panel hidden space-y-4 p-4 md:block md:p-5">
     <div>
       <div class="flex items-center gap-2">
         <span class="metric-icon"><Bot size={18} /></span>
@@ -220,21 +220,22 @@
     {/if}
   </section>
 
-  <form class="surface-panel h-fit space-y-4 p-4 md:p-5" on:submit|preventDefault={submit}>
+  <form class="surface-panel h-fit space-y-3 p-3.5 md:space-y-4 md:p-5" on:submit|preventDefault={submit}>
     <div>
       <p class="section-label">Transaksi</p>
       <h1 class="page-title mt-1">{editingId ? 'Edit transaksi' : 'Catat cepat'}</h1>
-      <p class="mt-2 text-sm text-muted">{editingId ? 'Ubah detail transaksi yang sudah tersimpan.' : 'Input minimal untuk pencatatan harian.'}</p>
+      <p class="mt-1 text-sm text-muted md:mt-2">{editingId ? 'Ubah detail transaksi yang sudah tersimpan.' : 'Input minimal untuk pencatatan harian.'}</p>
     </div>
     {#if error}<p class="rounded-2xl bg-rose-soft/30 p-3 text-sm">{error}</p>{/if}
     <div class="grid grid-cols-2 gap-2">
-      <button type="button" class="btn-secondary {type === 'expense' ? 'bg-clay/20 border-clay/40 shadow-soft' : ''}" on:click={() => (type = 'expense')}><ArrowDownCircle size={18} /> Uang keluar</button>
-      <button type="button" class="btn-secondary {type === 'income' ? 'bg-sage/30 border-moss/40 shadow-soft' : ''}" on:click={() => (type = 'income')}><ArrowUpCircle size={18} /> Uang masuk</button>
+      <button type="button" class="btn-secondary min-w-0 min-h-11 px-2 text-sm {type === 'expense' ? 'bg-clay/20 border-clay/40 shadow-soft' : ''}" on:click={() => (type = 'expense')}><ArrowDownCircle class="shrink-0" size={17} /> <span class="min-w-0 truncate">Uang keluar</span></button>
+      <button type="button" class="btn-secondary min-w-0 min-h-11 px-2 text-sm {type === 'income' ? 'bg-sage/30 border-moss/40 shadow-soft' : ''}" on:click={() => (type = 'income')}><ArrowUpCircle class="shrink-0" size={17} /> <span class="min-w-0 truncate">Uang masuk</span></button>
     </div>
     <MoneyInput id="amount" label="Nominal" bind:value={amount} large required />
+    <div class="grid gap-3 sm:grid-cols-2">
     <div>
       <label class="field-label" for="date">Tanggal</label>
-      <div class="relative"><CalendarDays class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={18} /><input class="input pl-10" id="date" type="date" bind:value={transaction_date} required /></div>
+      <input class="input" id="date" type="date" bind:value={transaction_date} required />
     </div>
     <div>
       <label class="field-label" for="category">Kategori</label>
@@ -244,6 +245,7 @@
           <option value={cat.id}>{cat.name}</option>
         {/each}
       </select>
+    </div>
     </div>
     <div>
       <label class="field-label" for="title">Judul / merchant</label>
@@ -262,23 +264,24 @@
   </form>
   </div>
 
-  <section class="space-y-3">
-    <div class="surface-panel flex items-end justify-between gap-3 p-4">
+  <section class="min-w-0 space-y-2.5 md:space-y-3">
+    <div class="surface-panel flex items-end justify-between gap-3 p-3.5 md:p-4">
       <div>
         <p class="section-label">History</p>
         <h2 class="text-xl font-black">Transaksi bulan ini</h2>
       </div>
     </div>
     {#each data.transactions as trx}
-      <article class="list-row flex items-center justify-between gap-3 p-3.5">
-        <div class="min-w-0">
+      <article class="list-row flex items-center justify-between gap-2 p-3 md:gap-3 md:p-3.5">
+        <div class="min-w-0 flex-1">
           <p class="truncate font-bold">{trx.title || trx.merchant || (trx.type === 'income' ? 'Uang masuk' : 'Uang keluar')}</p>
           <p class="text-sm text-muted">{trx.transaction_date}{trx.note ? ` · ${trx.note}` : ''}</p>
+          <p class="mt-1 font-black {trx.type === 'income' ? 'text-moss' : 'text-clay'} sm:hidden">{trx.type === 'income' ? '+' : '-'}{formatIDR(trx.amount)}</p>
         </div>
         <div class="flex shrink-0 items-center gap-2">
           <p class="hidden font-black {trx.type === 'income' ? 'text-moss' : 'text-clay'} sm:block">{trx.type === 'income' ? '+' : '-'}{formatIDR(trx.amount)}</p>
-          <button class="grid size-10 place-items-center rounded-lg border border-moss/10 bg-cream/60 text-moss" type="button" aria-label="Edit transaksi" on:click={() => editTransaction(trx)}><Pencil size={17} /></button>
-          <button class="grid size-10 place-items-center rounded-lg border border-moss/10 bg-paper text-clay" type="button" aria-label="Hapus transaksi" on:click={() => deleteTransaction(trx.id)}><Trash2 size={17} /></button>
+          <button class="icon-button size-9" type="button" aria-label="Edit transaksi" on:click={() => editTransaction(trx)}><Pencil size={16} /></button>
+          <button class="icon-button size-9 text-clay" type="button" aria-label="Hapus transaksi" on:click={() => deleteTransaction(trx.id)}><Trash2 size={16} /></button>
         </div>
       </article>
     {/each}

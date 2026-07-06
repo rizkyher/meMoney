@@ -46,9 +46,9 @@
     oninput={(event) => update(event.currentTarget.value)}
   />
   {#if chips.length && !disabled}
-    <div class="mt-2 flex flex-wrap gap-2">
+    <div class="mt-2 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
       {#each chips as chip}
-        <button type="button" class="rounded-lg border border-moss/10 bg-stone-soft/60 px-3 py-1.5 text-sm font-bold text-ink" onclick={() => pick(chip)}>{formatIDR(chip)}</button>
+        <button type="button" class="shrink-0 rounded-lg border border-moss/10 bg-stone-soft/60 px-2.5 py-1.5 text-xs font-bold text-ink sm:px-3 sm:text-sm" onclick={() => pick(chip)}>{formatIDR(chip)}</button>
       {/each}
     </div>
   {/if}

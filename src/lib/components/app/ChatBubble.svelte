@@ -83,7 +83,7 @@
   }
 </script>
 
-<div class="fixed bottom-24 right-4 z-40 md:bottom-5 md:right-5">
+<div class="fixed bottom-[5.75rem] right-4 z-30 md:bottom-5 md:right-5">
   {#if open}
     <section class="mb-3 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-3xl border border-moss/15 bg-paper/95 shadow-2xl backdrop-blur-xl">
       <div class="bg-moss px-4 py-3 text-paper">
@@ -143,11 +143,11 @@
   {/if}
 
   <button
-    class="grid size-14 place-items-center rounded-3xl bg-moss text-paper shadow-2xl ring-4 ring-paper/70 transition hover:bg-ink md:size-16"
+    class="grid size-12 place-items-center rounded-2xl bg-moss text-paper shadow-2xl ring-4 ring-paper/70 transition hover:bg-ink md:size-16 md:rounded-3xl"
     type="button"
     aria-label="Buka chat transaksi"
     onclick={() => (open = !open)}
   >
-    {#if open}<X size={24} />{:else}<Pencil size={24} />{/if}
+    {#if open}<X size={22} />{:else}<Bot size={22} />{/if}
   </button>
 </div>

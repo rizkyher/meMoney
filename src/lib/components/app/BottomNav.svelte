@@ -37,7 +37,7 @@
 
 {#if menuOpen}
   <button class="fixed inset-0 z-30 bg-ink/35 backdrop-blur-sm md:hidden" type="button" aria-label="Tutup menu" on:click={() => (menuOpen = false)}></button>
-  <section class="fixed inset-x-3 bottom-20 z-40 rounded-3xl border border-moss/10 bg-paper/95 p-4 shadow-2xl md:hidden" aria-label="Menu lengkap">
+  <section class="fixed inset-x-3 bottom-20 z-40 rounded-3xl border border-moss/10 bg-paper p-4 shadow-2xl md:hidden" aria-label="Menu lengkap">
     <div class="mb-3 flex items-center justify-between gap-3">
       <div>
         <p class="section-label">Menu</p>

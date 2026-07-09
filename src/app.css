@@ -45,6 +45,7 @@ button, input, select, textarea {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .focusable {
@@ -198,6 +199,10 @@ textarea:focus-visible {
 
 .hero-card > * {
   min-width: 0;
+}
+
+.hero-card .section-label {
+  color: #7BBDE8;
 }
 
 .hero-chip {
@@ -377,28 +382,166 @@ textarea:focus-visible {
   font-weight: 850;
 }
 
-@media (max-width: 767px) {
-  :root {
-    font-size: 14px;
+@media (min-width: 768px) {
+  body {
+    background:
+      linear-gradient(135deg, rgb(246 251 254 / 0.96) 0%, rgb(189 216 233 / 0.62) 58%, rgb(123 189 232 / 0.28) 100%),
+      #BDD8E9;
   }
 
   .app-root {
     background:
-      linear-gradient(180deg, rgb(189 216 233 / 0.94), rgb(246 251 254 / 0.95) 38%, rgb(189 216 233 / 0.42)),
+      linear-gradient(135deg, rgb(246 251 254 / 0.98) 0%, rgb(189 216 233 / 0.68) 58%, rgb(123 189 232 / 0.3) 100%),
       #BDD8E9;
+  }
+
+  .content-wrap {
+    max-width: 1180px;
+  }
+
+  .surface-panel {
+    border-radius: 16px;
+    background: #F6FBFE;
+    box-shadow: 0 12px 28px rgb(0 29 57 / 0.055);
+  }
+
+  .metric-card {
+    border-radius: 14px;
+    background: #F6FBFE;
+    box-shadow: 0 10px 24px rgb(0 29 57 / 0.045);
+  }
+
+  .metric-card:hover {
+    box-shadow: 0 14px 30px rgb(0 29 57 / 0.075);
+  }
+
+  .hero-card {
+    border-radius: 16px;
+    box-shadow: 0 18px 42px rgb(0 29 57 / 0.17);
+  }
+
+  .list-row {
+    background: rgb(246 251 254 / 0.9);
+  }
+
+  .page-title {
+    font-size: clamp(1.55rem, 1.55vw, 1.9rem);
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    font-size: 15px;
+  }
+
+  .app-root {
+    background:
+      linear-gradient(180deg, #001D39 0, #0A4174 8.8rem, #F6FBFE 8.8rem, rgb(189 216 233 / 0.52) 100%),
+      #BDD8E9;
+  }
+
+  .mobile-bank-hero {
+    width: calc(100% + 1.5rem);
+    margin-top: -0.5rem;
+    margin-inline: -0.75rem;
+    border: 0;
+    border-radius: 0 0 24px 24px;
+    background: linear-gradient(180deg, #001D39 0%, #0A4174 68%, #49769F 100%);
+    box-shadow: 0 16px 34px rgb(0 29 57 / 0.2);
+  }
+
+  .desktop-hero-chip {
+    display: none !important;
+  }
+
+  .mobile-balance-card {
+    border-color: rgb(246 251 254 / 0.9);
+    background: #F6FBFE;
+    color: #001D39;
+    box-shadow: 0 16px 30px rgb(0 29 57 / 0.16);
+  }
+
+  .mobile-balance-card .text-sky-soft,
+  .mobile-balance-card .text-stone-soft {
+    color: #49769F;
+  }
+
+  .mobile-balance-card .bg-paper\/12 {
+    background: rgb(189 216 233 / 0.28);
+  }
+
+  .mobile-balance-card .bg-paper\/20 {
+    background: rgb(73 118 159 / 0.16);
+  }
+
+  .mobile-quick-action {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 14px;
+    background: rgb(246 251 254 / 0.14);
+    color: #F6FBFE;
+    font-weight: 850;
+  }
+
+  .mobile-quick-action span {
+    display: grid;
+    width: 1.85rem;
+    height: 1.85rem;
+    place-items: center;
+    border-radius: 999px;
+    background: rgb(246 251 254 / 0.14);
+  }
+
+  .mobile-menu-panel {
+    border-radius: 18px;
+    border: 1px solid rgb(73 118 159 / 0.14);
+    background: #F6FBFE;
+    box-shadow: 0 12px 30px rgb(0 29 57 / 0.08);
+  }
+
+  .mobile-menu-action {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #001D39;
+    text-align: center;
+  }
+
+  .mobile-menu-action span {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    place-items: center;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgb(189 216 233 / 0.7), rgb(123 189 232 / 0.22));
+    color: #0A4174;
+    box-shadow: inset 0 0 0 1px rgb(10 65 116 / 0.08);
+  }
+
+  .mobile-menu-action strong {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-size: 0.72rem;
+    line-height: 1.05rem;
+    font-weight: 800;
   }
 
   .btn-primary,
   .btn-secondary {
-    min-height: 40px;
-    border-radius: 11px;
-    padding: 0.6rem 0.75rem;
+    min-height: 44px;
+    border-radius: 12px;
+    padding: 0.68rem 0.85rem;
   }
 
   .input {
-    min-height: 40px;
-    border-radius: 11px;
-    padding-block: 0.6rem;
+    min-height: 44px;
+    border-radius: 12px;
+    padding-block: 0.68rem;
   }
 
   .field-label {
@@ -419,7 +562,8 @@ textarea:focus-visible {
   .list-row {
     min-width: 0;
     border-radius: 16px;
-    box-shadow: 0 10px 28px rgb(0 29 57 / 0.07);
+    background: #F6FBFE;
+    box-shadow: 0 10px 24px rgb(0 29 57 / 0.06);
   }
 
   .surface-panel > *,
@@ -429,9 +573,19 @@ textarea:focus-visible {
   }
 
   .metric-icon {
-    width: 2rem;
-    height: 2rem;
+    width: 2.4rem;
+    height: 2.4rem;
     border-radius: 10px;
+  }
+
+  .icon-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .surface-panel > .section-label:first-child,
+  .surface-panel .section-label {
+    color: #0A4174;
   }
 
   .money-hero-number {

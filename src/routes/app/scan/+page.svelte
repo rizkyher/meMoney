@@ -100,36 +100,91 @@
   onDestroy(() => terminateOcr());
 </script>
 
-<section class="mx-auto max-w-3xl space-y-5">
-  <div>
-    <p class="section-label">Scan OCR</p>
-    <h1 class="page-title mt-1">Scan dulu, review sebelum simpan</h1>
-    <p class="mt-2 text-sm text-muted">OCR berjalan di browser. Lampiran hanya naik ke cloud saat kamu pilih simpan bukti.</p>
-  </div>
+<section class="mx-auto max-w-6xl space-y-3 md:space-y-4">
+  <div class="surface-panel overflow-hidden">
+    <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
+      <div class="min-w-0 space-y-4 p-4 md:p-5 lg:border-r lg:border-moss/10">
+        <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div class="min-w-0">
+            <p class="section-label">Scan OCR</p>
+            <h1 class="page-title mt-1 flex items-center gap-2"><ScanLine class="shrink-0" size={25} /> Scan bukti transaksi</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-muted">Upload bukti transaksi, cek hasil OCR, lalu simpan setelah nominal dan tanggalnya benar.</p>
+          </div>
+          <span class="status-pill w-fit shrink-0"><ShieldCheck size={14} /> Review dulu</span>
+        </div>
 
-  <div class="surface-panel space-y-4 p-4 md:p-5">
-    <label class="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-moss/25 bg-paper/80 p-8 text-center transition hover:border-moss/50 hover:bg-sky-soft/15">
-      <span class="metric-icon"><FileImage size={26} /></span>
-      <span class="mt-4 text-lg font-black">Upload gambar, PDF, atau file teks</span>
-      <span class="mt-1 text-sm text-muted">PDF dibaca di browser. Maksimal 3 halaman pertama dan 12 MB.</span>
-      <input class="sr-only" type="file" {accept} capture="environment" on:change={choose} />
-    </label>
-    {#if preview}<img class="max-h-80 w-full rounded-lg object-contain" src={preview} alt="Preview bukti transaksi" />{/if}
-    {#if file && !isImage}
-      <div class="list-row flex items-center gap-3 p-4">
-        <span class="metric-icon">{#if isPdf}<FileText size={22} />{:else}<FileImage size={22} />{/if}</span>
-        <div class="min-w-0">
-          <p class="truncate font-black">{file.name}</p>
-          <p class="text-sm text-muted">{isPdf ? 'PDF akan dirender lalu di-OCR.' : 'Teks akan dibaca langsung.'} {fileDescription}</p>
+        <label class="flex min-h-[210px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-moss/25 bg-paper p-5 text-center transition hover:border-moss/50 hover:bg-sky-soft/15 md:min-h-[260px] md:p-8">
+        <span class="metric-icon"><FileImage size={24} /></span>
+        <span class="mt-3 text-base font-black md:text-lg">Pilih file bukti</span>
+        <span class="mt-1 max-w-sm text-sm leading-6 text-muted">Gambar, PDF, dan file teks. PDF diproses sampai 3 halaman pertama, maksimal 12 MB.</span>
+        <input class="sr-only" type="file" {accept} capture="environment" on:change={choose} />
+        </label>
+        {#if preview}<img class="max-h-80 w-full rounded-lg object-contain" src={preview} alt="Preview bukti transaksi" />{/if}
+        {#if file && !isImage}
+          <div class="list-row flex items-center gap-3 p-4">
+            <span class="metric-icon">{#if isPdf}<FileText size={22} />{:else}<FileImage size={22} />{/if}</span>
+            <div class="min-w-0">
+              <p class="truncate font-black">{file.name}</p>
+              <p class="text-sm text-muted">{isPdf ? 'PDF akan dirender lalu di-OCR.' : 'Teks akan dibaca langsung.'} {fileDescription}</p>
+            </div>
+          </div>
+        {/if}
+        {#if status === 'ocr_running'}
+          <div class="rounded-2xl bg-cream/60 p-3">
+            <div class="flex items-center justify-between gap-3 text-sm font-black text-moss">
+              <span>Membaca file</span>
+              <span>{progress}%</span>
+            </div>
+            <div class="mt-3 h-2 overflow-hidden rounded-full bg-paper">
+              <div class="h-full rounded-full bg-moss" style={`width:${Math.max(3, progress)}%`}></div>
+            </div>
+          </div>
+        {/if}
+        {#if error}<p class="rounded-2xl bg-rose-soft/30 p-3 text-sm font-bold">{error}</p>{/if}
+
+        <div class="grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
+          <p class="flex items-start gap-2 text-xs font-bold leading-5 text-muted"><ShieldCheck class="mt-0.5 shrink-0" size={15} /> OCR berjalan di browser. Lampiran hanya naik ke cloud kalau kamu memilih simpan file bukti.</p>
+          <button class="btn-primary w-full md:w-auto md:min-w-52" disabled={!file || status === 'ocr_running'} on:click={scan}><ScanLine size={18} /> {status === 'ocr_running' ? `Membaca ${progress}%` : 'Jalankan OCR'}</button>
         </div>
       </div>
-    {/if}
-    {#if error}<p class="rounded-2xl bg-rose-soft/30 p-3 text-sm">{error}</p>{/if}
-    <button class="btn-primary w-full" disabled={!file || status === 'ocr_running'} on:click={scan}><ScanLine size={18} /> {status === 'ocr_running' ? `Membaca ${progress}%` : 'Jalankan OCR'}</button>
+
+      <aside class="space-y-4 bg-cream/35 p-4 md:p-5">
+        <div>
+          <p class="section-label">Alur scan</p>
+          <h2 class="mt-1 text-xl font-black">Dari file ke transaksi</h2>
+          <p class="mt-2 text-sm leading-6 text-muted">Panel ini membantu memastikan hasil scan tidak langsung masuk tanpa pengecekan.</p>
+        </div>
+        <div class="space-y-2">
+          <div class="list-row flex items-center gap-3 p-3">
+            <span class="metric-icon"><FileImage size={18} /></span>
+            <div>
+              <p class="font-black">1. Upload bukti</p>
+              <p class="text-sm text-muted">JPG, PNG, WEBP, PDF, atau teks.</p>
+            </div>
+          </div>
+          <div class="list-row flex items-center gap-3 p-3">
+            <span class="metric-icon"><ScanLine size={18} /></span>
+            <div>
+              <p class="font-black">2. Baca OCR</p>
+              <p class="text-sm text-muted">PDF diproses sampai 3 halaman pertama.</p>
+            </div>
+          </div>
+          <div class="list-row flex items-center gap-3 p-3">
+            <span class="metric-icon"><CheckCircle2 size={18} /></span>
+            <div>
+              <p class="font-black">3. Review hasil</p>
+              <p class="text-sm text-muted">Edit nominal, tanggal, dan merchant sebelum simpan.</p>
+            </div>
+          </div>
+        </div>
+        <div class="soft-divider"></div>
+        <p class="flex items-start gap-2 text-sm font-bold leading-6 text-muted"><ShieldCheck class="mt-0.5 shrink-0" size={16} /> Tidak ada transaksi yang disimpan otomatis dari OCR.</p>
+      </aside>
+    </div>
   </div>
 
   {#if draft}
-    <section class="surface-panel space-y-4 p-5">
+    <section class="surface-panel space-y-4 p-4 md:p-5">
       <div>
         <h2 class="text-xl font-black">Review hasil scan</h2>
         {#if draft.confidence < 0.7}<p class="mt-1 text-sm text-clay">Hasil scan belum yakin. Cek nominalnya dulu ya.</p>{/if}
@@ -141,9 +196,9 @@
         <label><span class="field-label">Merchant</span><input class="input" bind:value={draft.merchant} /></label>
       </div>
       <label><span class="field-label">Catatan</span><textarea class="input min-h-24" bind:value={draft.note}></textarea></label>
-      <label class="list-row flex items-center gap-3 p-3 text-sm font-bold"><input type="checkbox" bind:checked={saveImage} /> <CloudUpload size={18} /> Simpan file bukti ke cloud</label>
-      <p class="flex items-center gap-2 text-sm text-muted"><ShieldCheck size={16} /> Tidak ada auto-save. Kamu tetap pegang keputusan terakhir.</p>
-      <details class="rounded-xl bg-cream/70 p-3 text-sm"><summary class="font-bold">OCR raw text</summary><pre class="mt-3 whitespace-pre-wrap">{rawText}</pre></details>
+      <label class="list-row flex min-h-[48px] items-center gap-3 p-3 text-sm font-bold"><input class="size-5" type="checkbox" bind:checked={saveImage} /> <CloudUpload size={18} /> Simpan file bukti ke cloud</label>
+      <p class="flex items-start gap-2 text-sm leading-6 text-muted"><ShieldCheck class="mt-0.5 shrink-0" size={16} /> Tidak ada auto-save. Kamu tetap pegang keputusan terakhir.</p>
+      <details class="rounded-xl bg-cream/70 p-3 text-sm"><summary class="min-h-[44px] cursor-pointer font-bold">OCR raw text</summary><pre class="mt-3 max-h-56 overflow-auto whitespace-pre-wrap">{rawText}</pre></details>
       <button class="btn-primary w-full" on:click={save}><CheckCircle2 size={18} /> Simpan transaksi hasil scan</button>
     </section>
   {/if}

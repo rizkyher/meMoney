@@ -13,7 +13,7 @@
 </script>
 
 <section class="space-y-5">
-  <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+  <div class="surface-panel flex flex-col gap-3 p-4 md:border-0 md:bg-transparent md:p-0 md:shadow-none lg:flex-row lg:items-end lg:justify-between">
     <div>
       <p class="section-label">Rekap</p>
       <h1 class="page-title mt-1 flex items-center gap-3"><BarChart3 size={28} /> Laporan transaksi</h1>

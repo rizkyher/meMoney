@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
+  import EmptyState from '$lib/components/app/EmptyState.svelte';
   import MoneyInput from '$lib/components/ui/MoneyInput.svelte';
   import { formatIDR } from '$lib/utils/money';
   import { toDateInput } from '$lib/utils/date';
@@ -271,19 +272,23 @@
         <h2 class="text-xl font-black">Transaksi bulan ini</h2>
       </div>
     </div>
-    {#each data.transactions as trx}
-      <article class="list-row flex items-center justify-between gap-2 p-3 md:gap-3 md:p-3.5">
-        <div class="min-w-0 flex-1">
-          <p class="truncate font-bold">{trx.title || trx.merchant || (trx.type === 'income' ? 'Uang masuk' : 'Uang keluar')}</p>
-          <p class="text-sm text-muted">{trx.transaction_date}{trx.note ? ` · ${trx.note}` : ''}</p>
-          <p class="mt-1 font-black {trx.type === 'income' ? 'text-moss' : 'text-clay'} sm:hidden">{trx.type === 'income' ? '+' : '-'}{formatIDR(trx.amount)}</p>
-        </div>
-        <div class="flex shrink-0 items-center gap-2">
-          <p class="hidden font-black {trx.type === 'income' ? 'text-moss' : 'text-clay'} sm:block">{trx.type === 'income' ? '+' : '-'}{formatIDR(trx.amount)}</p>
-          <button class="icon-button size-9" type="button" aria-label="Edit transaksi" on:click={() => editTransaction(trx)}><Pencil size={16} /></button>
-          <button class="icon-button size-9 text-clay" type="button" aria-label="Hapus transaksi" on:click={() => deleteTransaction(trx.id)}><Trash2 size={16} /></button>
-        </div>
-      </article>
-    {/each}
+    {#if data.transactions.length === 0}
+      <EmptyState title="Belum ada transaksi bulan ini" body="Catatan pemasukan dan pengeluaran yang kamu simpan akan muncul di sini." />
+    {:else}
+      {#each data.transactions as trx}
+        <article class="list-row flex items-center justify-between gap-2 p-3 md:gap-3 md:p-3.5">
+          <div class="min-w-0 flex-1">
+            <p class="truncate font-bold">{trx.title || trx.merchant || (trx.type === 'income' ? 'Uang masuk' : 'Uang keluar')}</p>
+            <p class="text-sm text-muted">{trx.transaction_date}{trx.note ? ` · ${trx.note}` : ''}</p>
+            <p class="mt-1 font-black {trx.type === 'income' ? 'text-moss' : 'text-clay'} sm:hidden">{trx.type === 'income' ? '+' : '-'}{formatIDR(trx.amount)}</p>
+          </div>
+          <div class="flex shrink-0 items-center gap-2">
+            <p class="hidden font-black {trx.type === 'income' ? 'text-moss' : 'text-clay'} sm:block">{trx.type === 'income' ? '+' : '-'}{formatIDR(trx.amount)}</p>
+            <button class="icon-button size-9" type="button" aria-label="Edit transaksi" on:click={() => editTransaction(trx)}><Pencil size={16} /></button>
+            <button class="icon-button size-9 text-clay" type="button" aria-label="Hapus transaksi" on:click={() => deleteTransaction(trx.id)}><Trash2 size={16} /></button>
+          </div>
+        </article>
+      {/each}
+    {/if}
   </section>
 </section>

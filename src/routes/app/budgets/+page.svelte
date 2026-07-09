@@ -55,44 +55,67 @@
   }
 </script>
 
-<section class="mx-auto max-w-4xl space-y-5">
-  <div>
-    <p class="section-label">Budget</p>
-    <h1 class="page-title mt-1 flex items-center gap-3"><BadgeDollarSign size={28} /> Atur jatah harian, mingguan, dan bulanan</h1>
-    <p class="mt-2 text-sm text-muted">Isi satu jatah manual, lalu periode lain bisa otomatis mengikuti hitungan harian, mingguan, atau bulanan.</p>
-  </div>
-  <div class="surface-panel flex items-start gap-3 p-4 md:p-5">
-    <span class="metric-icon"><Calculator size={18} /></span>
-    <div class="min-w-0">
-      <p class="font-black">Auto budget saling terhubung</p>
-      <p class="mt-1 text-sm leading-6 text-muted">Contoh: jatah harian {formatIDR(50000)} otomatis menjadi mingguan {formatIDR(350000)} dan bulanan {formatIDR(1500000)}. Kalau kamu ubah jatah mingguan atau bulanan secara manual, periode auto akan dihitung ulang dari angka itu.</p>
+<section class="mx-auto max-w-6xl space-y-3 md:space-y-4">
+  <div class="surface-panel p-4 md:p-5">
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(300px,420px)] lg:items-center">
+      <div class="min-w-0">
+        <p class="section-label">Budget</p>
+        <h1 class="page-title mt-1 flex items-center gap-2"><BadgeDollarSign class="shrink-0" size={25} /> Atur jatah uang</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-muted">Pilih satu periode sebagai sumber manual. Periode lain bisa otomatis mengikuti supaya jatah harian, mingguan, dan bulanan selalu sinkron.</p>
+      </div>
+      <div class="rounded-2xl border border-moss/10 bg-cream/45 p-4">
+        <div class="flex items-start gap-3">
+          <span class="metric-icon shrink-0"><Calculator size={18} /></span>
+          <div class="min-w-0">
+            <p class="font-black">Auto budget</p>
+            <p class="mt-1 text-sm leading-6 text-muted">Harian {formatIDR(50000)} otomatis menjadi mingguan {formatIDR(350000)} dan bulanan {formatIDR(1500000)}.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="surface-panel space-y-4 p-4 md:p-5">
-    {#each rows as row}
-      <div class="list-row grid gap-4 p-4 sm:grid-cols-[1fr_230px_140px]">
-        <div class="min-w-0">
-          <div class="flex flex-wrap items-center gap-2">
-            <p class="font-black">{labels[row.period]}</p>
-            {#if row.mode === 'auto'}
-              <span class="status-pill"><Lock size={13} /> Auto</span>
-            {/if}
-          </div>
-          <p class="mt-1 text-sm text-muted">{periodCopy[row.period]}</p>
-          <p class="mt-2 text-xs font-bold text-muted">{autoCopy(row)}</p>
-        </div>
-        <MoneyInput id={`budget-${row.period}`} label="Nominal" value={row.amount} disabled={row.mode === 'auto'} chips={[]} onValueChange={(amount: number) => setAmount(row.period, amount)} />
-        <label>
-          <span class="field-label">Mode</span>
-          <select class="input" value={row.mode} onchange={(event) => setMode(row.period, event.currentTarget.value as 'manual' | 'auto')}>
-            <option value="manual">Manual</option>
-            <option value="auto">Auto</option>
-          </select>
-        </label>
+    <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="section-label">Periode</p>
+        <h2 class="text-xl font-black">Jatah aktif</h2>
       </div>
-    {/each}
-    {#if saved}<p class="text-sm font-bold text-moss">{saved}</p>{/if}
-    <button class="btn-primary w-full" onclick={save}><Save size={18} /> Simpan budget</button>
+      <p class="text-sm font-bold leading-6 text-muted md:max-w-md md:text-right">Ubah nominal di kartu manual, lalu kartu auto akan menghitung ulang otomatis.</p>
+    </div>
+
+    <div class="grid gap-3 lg:grid-cols-3">
+      {#each rows as row}
+        <div class="list-row flex min-w-0 flex-col gap-4 p-4">
+          <div class="flex min-w-0 items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p class="font-black">{labels[row.period]}</p>
+              <p class="mt-1 text-sm leading-6 text-muted">{periodCopy[row.period]}</p>
+            </div>
+            <span class="status-pill shrink-0">
+              {#if row.mode === 'auto'}<Lock size={13} /> Auto{:else}Manual{/if}
+            </span>
+          </div>
+
+          <p class="min-h-[44px] rounded-xl bg-cream/55 px-3 py-2 text-xs font-bold leading-5 text-muted">{autoCopy(row)}</p>
+
+          <div class="mt-auto space-y-3">
+            <MoneyInput id={`budget-${row.period}`} label="Nominal" value={row.amount} disabled={row.mode === 'auto'} chips={[]} onValueChange={(amount: number) => setAmount(row.period, amount)} />
+            <label>
+              <span class="field-label">Mode</span>
+              <select class="input" value={row.mode} onchange={(event) => setMode(row.period, event.currentTarget.value as 'manual' | 'auto')}>
+                <option value="manual">Manual</option>
+                <option value="auto">Auto</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      {/each}
+    </div>
+
+    {#if saved}<p class="rounded-2xl bg-sage/20 p-3 text-sm font-bold text-moss">{saved}</p>{/if}
+    <div class="flex justify-end">
+      <button class="btn-primary w-full md:w-auto md:min-w-56" onclick={save}><Save size={18} /> Simpan budget</button>
+    </div>
   </div>
 </section>

@@ -3,6 +3,7 @@
   import { formatIDR } from '$lib/utils/money';
   import { toDateInput } from '$lib/utils/date';
   import { Bot, CheckCircle2, Pencil, Save, SendHorizonal, Sparkles, X } from '@lucide/svelte';
+  import { onMount } from 'svelte';
 
   let { csrfToken = '' } = $props();
 
@@ -13,6 +14,12 @@
   let error = $state('');
   let success = $state('');
   let draft = $state<any>(null);
+
+  onMount(() => {
+    const openChat = () => (open = true);
+    window.addEventListener('memoney:open-chat', openChat);
+    return () => window.removeEventListener('memoney:open-chat', openChat);
+  });
 
   function toTransactionPayload(input: any) {
     return {
@@ -83,16 +90,16 @@
   }
 </script>
 
-<div class="fixed bottom-[7.25rem] right-4 z-30 md:bottom-5 md:right-5">
+<div class="fixed bottom-[5.75rem] right-3 z-30 md:bottom-5 md:right-5">
   {#if open}
-    <section class="mb-3 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-3xl border border-moss/15 bg-paper/95 shadow-2xl backdrop-blur-xl">
+    <section class="mb-3 max-h-[72dvh] w-[calc(100vw-1.5rem)] max-w-sm overflow-hidden overflow-y-auto rounded-3xl border border-moss/15 bg-paper/95 shadow-2xl backdrop-blur-xl">
       <div class="bg-moss px-4 py-3 text-paper">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
             <p class="flex items-center gap-2 text-sm font-black"><Bot size={17} /> Chat transaksi</p>
             <p class="mt-1 text-xs leading-5 text-stone-soft">Ketik singkat, lalu simpan langsung.</p>
           </div>
-          <button class="grid size-9 shrink-0 place-items-center rounded-xl border border-paper/15 bg-paper/10" type="button" aria-label="Tutup chat" onclick={() => (open = false)}>
+          <button class="grid size-11 shrink-0 place-items-center rounded-xl border border-paper/15 bg-paper/10" type="button" aria-label="Tutup chat" onclick={() => (open = false)}>
             <X size={17} />
           </button>
         </div>
@@ -143,7 +150,7 @@
   {/if}
 
   <button
-    class="grid size-12 place-items-center rounded-2xl bg-moss text-paper shadow-2xl ring-4 ring-paper/70 transition hover:bg-ink md:size-16 md:rounded-3xl"
+    class="hidden size-12 place-items-center rounded-2xl bg-moss text-paper shadow-2xl ring-2 ring-paper/70 transition hover:bg-ink md:grid"
     type="button"
     aria-label="Buka chat transaksi"
     onclick={() => (open = !open)}

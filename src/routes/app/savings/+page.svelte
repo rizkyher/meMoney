@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
+  import EmptyState from '$lib/components/app/EmptyState.svelte';
   import MoneyInput from '$lib/components/ui/MoneyInput.svelte';
   import { formatIDR } from '$lib/utils/money';
   import { Pencil, PiggyBank, PlusCircle, Save, Trash2, X } from '@lucide/svelte';
@@ -55,7 +56,7 @@
   }
 </script>
 
-<section class="grid min-w-0 gap-3 md:gap-5 lg:grid-cols-[minmax(0,390px)_minmax(0,1fr)]">
+<section class="mx-auto grid max-w-5xl min-w-0 gap-3 md:gap-5 lg:grid-cols-[minmax(360px,430px)_minmax(0,1fr)]">
   <form class="surface-panel h-fit min-w-0 space-y-3 p-3.5 md:space-y-4 md:p-5" on:submit|preventDefault={create}>
     <div>
       <p class="section-label">Tabungan</p>
@@ -74,21 +75,32 @@
     </div>
   </form>
   <div class="min-w-0 space-y-2.5 md:space-y-3">
-    {#each data.goals as goal}
-      <article class="list-row min-w-0 p-3.5 md:p-4">
-        <div class="flex min-w-0 items-start justify-between gap-3">
-          <div class="min-w-0 flex-1">
-            <p class="truncate font-black">{goal.name}</p>
-            <p class="mt-0.5 break-words text-sm text-muted">{formatIDR(goal.current_amount)} dari {formatIDR(goal.target_amount)}</p>
+    <div class="surface-panel flex items-end justify-between gap-3 p-3.5 md:p-4">
+      <div>
+        <p class="section-label">Target aktif</p>
+        <h2 class="text-xl font-black">Progress tabungan</h2>
+      </div>
+      <p class="text-sm font-black text-muted">{data.goals.length} goal</p>
+    </div>
+    {#if data.goals.length === 0}
+      <EmptyState title="Belum ada goal tabungan" body="Buat target pertama untuk memantau saldo dan progressnya dari sini." />
+    {:else}
+      {#each data.goals as goal}
+        <article class="list-row min-w-0 p-3.5 md:p-4">
+          <div class="flex min-w-0 items-start justify-between gap-3">
+            <div class="min-w-0 flex-1">
+              <p class="truncate font-black">{goal.name}</p>
+              <p class="mt-0.5 break-words text-sm text-muted">{formatIDR(goal.current_amount)} dari {formatIDR(goal.target_amount)}</p>
+            </div>
+            <div class="flex shrink-0 items-center gap-1.5 md:gap-2">
+              <p class="min-w-10 text-right font-black text-moss">{goal.target_amount ? Math.round(goal.current_amount / goal.target_amount * 100) : 0}%</p>
+              <button class="icon-button size-9 md:size-10" type="button" aria-label="Edit goal" on:click={() => editGoal(goal)}><Pencil size={16} /></button>
+              <button class="icon-button size-9 text-clay md:size-10" type="button" aria-label="Hapus goal" on:click={() => deleteGoal(goal.id)}><Trash2 size={16} /></button>
+            </div>
           </div>
-          <div class="flex shrink-0 items-center gap-1.5 md:gap-2">
-            <p class="min-w-10 text-right font-black text-moss">{goal.target_amount ? Math.round(goal.current_amount / goal.target_amount * 100) : 0}%</p>
-            <button class="icon-button size-9 md:size-10" type="button" aria-label="Edit goal" on:click={() => editGoal(goal)}><Pencil size={16} /></button>
-            <button class="icon-button size-9 text-clay md:size-10" type="button" aria-label="Hapus goal" on:click={() => deleteGoal(goal.id)}><Trash2 size={16} /></button>
-          </div>
-        </div>
-        <div class="mt-3 h-3 overflow-hidden rounded-full bg-stone-soft"><div class="h-full bg-moss" style={`width:${goal.target_amount ? Math.min(100, goal.current_amount / goal.target_amount * 100) : 0}%`}></div></div>
-      </article>
-    {/each}
+          <div class="mt-3 h-3 overflow-hidden rounded-full bg-stone-soft"><div class="h-full bg-moss" style={`width:${goal.target_amount ? Math.min(100, goal.current_amount / goal.target_amount * 100) : 0}%`}></div></div>
+        </article>
+      {/each}
+    {/if}
   </div>
 </section>

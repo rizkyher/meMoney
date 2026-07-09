@@ -48,7 +48,7 @@
   {#if chips.length && !disabled}
     <div class="mt-2 flex flex-wrap gap-2">
       {#each chips as chip}
-        <button type="button" class="shrink-0 rounded-lg border border-moss/10 bg-stone-soft/60 px-2.5 py-1.5 text-xs font-bold text-ink sm:px-3 sm:text-sm" onclick={() => pick(chip)}>{formatIDR(chip)}</button>
+        <button type="button" class="min-h-[44px] shrink-0 rounded-xl border border-moss/10 bg-stone-soft/60 px-3 py-2 text-sm font-bold text-ink shadow-sm transition hover:border-moss/20 hover:bg-sky-soft/20" onclick={() => pick(chip)}>{formatIDR(chip)}</button>
       {/each}
     </div>
   {/if}
